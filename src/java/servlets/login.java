@@ -5,17 +5,29 @@
  */
 package servlets;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author Kiruu
  */
+
+@MultipartConfig(fileSizeThreshold=1024*1024*10, 	// 10 MB 
+                 maxFileSize=1024*1024*50,      	// 50 MB
+                 maxRequestSize=1024*1024*100)   	// 100 MB
 public class login extends HttpServlet {
 
     /**
@@ -70,14 +82,86 @@ public class login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-        switch (action) {
-            case "create":
-                break;
-            case "login":
-                break; 
-        }
+//        String action = request.getParameter("action");
+//        System.out.println(action);
+//        switch (action) {
+//            case "create":
+//                String userName = request.getParameter("userName");
+//                String password = request.getParameter("password");
+//                
+//                Part filePart = request.getPart("avatar");
+//                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
+//                InputStream fileContent = filePart.getInputStream();
+//                System.out.println(fileContent);
+//                
+//                break;
+//            case "login":
+//                
+//                break; 
+//        }
+       request.getParameter(uploadFile(request));
 
+    }
+    
+    private String uploadFile(HttpServletRequest request) throws IOException, ServletException{
+        String fileName="";
+        try{
+            Part filePart = request.getPart("avatar");
+            fileName = (String) getFileName(filePart);
+            System.out.println(fileName);
+            System.out.println(filePart);
+            InputStream fileContent = filePart.getInputStream();
+            System.out.println(fileContent.read());
+            
+            int data = fileContent.read();
+            while(data != -1) {
+              data = fileContent.read();
+              System.out.println(data);
+            }
+            fileContent.close();
+            
+//            String applicationPath = request.getServletContext().getRealPath("");
+////            System.out.println("here");
+////            System.out.println(applicationPath);
+//            String basePath = applicationPath + File.separator + "image" + File.separator;
+//            InputStream inputStream = null;
+//            OutputStream outputStream = null;
+//            try {
+//                File outputFilePath = new  File(basePath + fileName);
+//                inputStream = filePart.getInputStream();
+//                outputStream = new FileOutputStream(outputFilePath);
+//                int read = 0;
+//                final byte[] bytes =  new  byte[1024];
+//                while((read = inputStream.read(bytes)) != -1){
+//                    outputStream.write(bytes, 0, read);
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                fileName = "";
+//            }finally{
+//                if(inputStream != null){
+//                    inputStream.close();
+//                }
+//                if(outputStream != null){
+//                    outputStream.close();
+//                }
+//            }
+            
+        }catch(Exception e){
+            fileName = "";
+        }
+        return fileName;
+    }
+    private String  getFileName(Part part){
+        final String  partHeader = part.getHeader("content-disposition");
+        System.out.println("*****partHeader :"+ partHeader);
+        for(String content : part.getHeader("content-disposition").split(";")){
+            if(content.trim().startsWith("filename")){
+                return content.substring(content.indexOf('=')+1).trim().replace("\"", "" );
+            }
+        }
+        
+        return null;
     }
 
     /**
