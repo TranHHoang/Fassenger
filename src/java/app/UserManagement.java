@@ -20,7 +20,4 @@ public class UserManagement {
         return dao.getUserById(id);
     }
     
-    public void editUserById(User user) {
-        dao.editUserById(user);
-    }
 }
