@@ -92,4 +92,39 @@ public class DatabaseDao {
             e.printStackTrace();
         }
     }
+
+    public void addUser(User user) {
+        try {
+            String sql = String.format("insert into %s values (newid(), ?, ?, ? , ?) ", DatabaseTable.USER_TABLE);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, user.getName());
+            statement.setNString(2, user.getNickName());
+            statement.setString(3, user.getPassword());
+            statement.setBytes(4, user.getImage());
+
+            System.out.println(statement.toString());
+
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public User getUserByUserName(String username){
+        User u = null;
+        try{
+            ArrayList<User> result = new ArrayList<>();
+            String sql = "select * from FassengerUser where UserName = ?";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1,username);
+            ResultSet rs = pst.executeQuery();
+            while(rs.next()){
+                result.add(new User(rs.getString(UserTable.ID) , rs.getString(UserTable.USER_NAME) ,rs.getString(UserTable.NICK_NAME) , rs.getString(UserTable.PASSWORD) , rs.getBytes(UserTable.AVATAR)));
+            }
+            u = result.get(0);
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return u;
+    }
+    
 }
