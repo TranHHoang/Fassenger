@@ -10,6 +10,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Chat page</title>
+        <script src="./scripts/chatroom.js"></script>
+        <script>openConnection('admin')</script>
     </head>
     <body>
           <h2>Chat Room</h2>

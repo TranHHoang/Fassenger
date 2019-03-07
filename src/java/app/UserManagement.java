@@ -1,6 +1,5 @@
 package app;
 
-
 import dao.DatabaseDao;
 import java.util.List;
 import models.User;
@@ -19,5 +18,4 @@ public class UserManagement {
     public User getUserById(String id) {
         return dao.getUserById(id);
     }
-    
 }

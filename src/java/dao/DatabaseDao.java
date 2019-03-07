@@ -95,7 +95,7 @@ public class DatabaseDao {
 
     public void addUser(User user) {
         try {
-            String sql = String.format("insert into %s values (newid(), ?, ?, ? , ?) ", DatabaseTable.USER_TABLE);
+            String sql = String.format("insert into %s values (NEWID(), ?, ?, ?, ?) ", DatabaseTable.USER_TABLE);
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getName());
             statement.setNString(2, user.getNickName());
@@ -109,22 +109,28 @@ public class DatabaseDao {
             e.printStackTrace();
         }
     }
-    public User getUserByUserName(String username){
-        User u = null;
-        try{
-            ArrayList<User> result = new ArrayList<>();
-            String sql = "select * from FassengerUser where UserName = ?";
+
+    public User getUserByName(String name) {
+        try {
+            String sql = "select * from " + DatabaseTable.USER_TABLE + " where " + UserTable.USER_NAME + " = ?";
+            
             PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setString(1,username);
+            pst.setString(1, name);
+            
             ResultSet rs = pst.executeQuery();
-            while(rs.next()){
-                result.add(new User(rs.getString(UserTable.ID) , rs.getString(UserTable.USER_NAME) ,rs.getString(UserTable.NICK_NAME) , rs.getString(UserTable.PASSWORD) , rs.getBytes(UserTable.AVATAR)));
-            }
-            u = result.get(0);
-        }catch(Exception e){
+            rs.next();
+            
+            return new User(
+                    rs.getString(UserTable.ID), 
+                    rs.getString(UserTable.USER_NAME), 
+                    rs.getString(UserTable.NICK_NAME), 
+                    rs.getString(UserTable.PASSWORD), 
+                    rs.getBytes(UserTable.AVATAR));
+
+        } catch (Exception e) {
             System.out.println(e);
         }
-        return u;
+        return null;
     }
-    
+
 }
