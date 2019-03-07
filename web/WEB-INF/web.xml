@@ -3,6 +3,10 @@
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>servlets.LoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>servlets.RegisterServlet</servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
             <max-request-size>52428800</max-request-size>
@@ -12,6 +16,10 @@
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/register</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

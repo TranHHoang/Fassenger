@@ -12,6 +12,11 @@
         <title>Chat page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+          <h2>Chat Room</h2>
+        <input id="textMessage" type="text" />
+        <input onclick="sendMessage()" value="Send Message" type="button" /> <br/><br/>
+
+        <textarea id="textAreaMessage" rows="10" cols="50"></textarea>
+
     </body>
 </html>

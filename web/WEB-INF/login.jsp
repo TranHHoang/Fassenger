@@ -12,12 +12,18 @@
         <title>Login Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <form action="login" method="POST" enctype="multipart/form-data">
+        <h1>Login</h1>
+        <form action="login" method="POST">
+            Username:<input name="userName" type="text"/> 
+            Password:<input name="password" type="text"/>
+            <input type="submit" name="action" value="login" />
+        </form>
+        
+        <h1>Register</h1>
+        <form action="register" method="POST" enctype="multipart/form-data">
             Username:<input name="userName" type="text"/> 
             Password:<input name="password" type="text"/>
             File: <input type="file" name="avatar" accept="image/*"/>
-            <input type="submit" name="action" value="login" />
             <input type="submit" name="action" value="create" />
         </form>
     </body>
