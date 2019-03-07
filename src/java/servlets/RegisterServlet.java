@@ -77,6 +77,7 @@ public class RegisterServlet extends HttpServlet {
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
         ArrayList<Byte> image = uploadFile(request);
+        
     }
 
     

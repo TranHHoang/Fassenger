@@ -8,7 +8,9 @@ package servlets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,7 +56,19 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+            Cookie cookies[] = request.getCookies();
+            for (Cookie cooky : cookies) {
+                if(cooky.getName().equals("isLogin")) {
+                    if (cooky.getValue().equals("true")) {
+                        RequestDispatcher view = request.getRequestDispatcher("WEB-INF/chatPage.jsp");
+                        view.forward(request, response);
+                    }
+                    else {
+                        response.sendRedirect("./");
+                    }
+                    return;
+                }
+            }
     }
 
     /**
@@ -68,7 +82,16 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+                String userName = request.getParameter("userName");
+                String password = request.getParameter("password");
+                if (userName.equals("admin") && password.equals("123")) {
+                    response.addCookie(new Cookie("isLogin", "true"));
+                    response.sendRedirect("./login");
+                }
+                else {
+                    response.addCookie(new Cookie("isLogin", "false"));
+                    response.sendRedirect("./");
+                }
         
     }
 
