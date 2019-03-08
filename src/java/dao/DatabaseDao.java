@@ -102,8 +102,6 @@ public class DatabaseDao {
             statement.setString(3, user.getPassword());
             statement.setBytes(4, user.getImage());
 
-            System.out.println(statement.toString());
-
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
