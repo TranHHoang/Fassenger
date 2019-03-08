@@ -18,4 +18,13 @@ public class UserManagement {
     public User getUserById(String id) {
         return dao.getUserById(id);
     }
+    
+    public User getUserByName(String name){
+        return dao.getUserByName(name);
+    }
+    
+    public void addUser(User u){
+        dao.addUser(u);
+    }
+    
 }
