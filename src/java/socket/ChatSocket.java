@@ -32,9 +32,9 @@ public class ChatSocket {
 
     @OnMessage
     public void onMessage(String message, Session userSession) throws IOException {
-        String username = (String) userSession.getUserProperties().get("UserName");
+        String username = (String) userSession.getUserProperties().get("userName");
         if (username == null) {
-            userSession.getUserProperties().put("username", message);
+            userSession.getUserProperties().put("userName", message);
             userSession.getBasicRemote().sendText("System: you are connected as " + message);
         } else {
             for (Session session : users) {
@@ -47,7 +47,7 @@ public class ChatSocket {
     public void onClose(Session session) throws IOException {
         users.remove(session);
         for (Session s : users) {
-            s.getBasicRemote().sendText(session.getUserProperties().get("username") + " offline");
+            s.getBasicRemote().sendText(session.getUserProperties().get("userName") + " offline");
         }
     }
 

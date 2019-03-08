@@ -86,7 +86,15 @@ public class LoginServlet extends HttpServlet {
                 String password = request.getParameter("password");
                 if (userName.equals("admin") && password.equals("123")) {
                     response.addCookie(new Cookie("isLogin", "true"));
-                    response.sendRedirect("./login");
+                    request.setAttribute("username", "admin");
+                    RequestDispatcher view = request.getRequestDispatcher("WEB-INF/chatPage.jsp");
+                    view.forward(request, response);
+                }
+                else if (userName.equals("admin2") && password.equals("123")) {
+                    response.addCookie(new Cookie("isLogin", "true"));
+                    request.setAttribute("username", "admin2");
+                    RequestDispatcher view = request.getRequestDispatcher("WEB-INF/chatPage.jsp");
+                    view.forward(request, response);
                 }
                 else {
                     response.addCookie(new Cookie("isLogin", "false"));
