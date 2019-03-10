@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
             for (Cookie cooky : cookies) {
                 if(cooky.getName().equals("isLogin")) {
                     if (cooky.getValue().equals("true")) {
-                        RequestDispatcher view = request.getRequestDispatcher("WEB-INF/chatPage.jsp");
+                        RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
                         view.forward(request, response);
                     }
                     else {
@@ -87,13 +87,13 @@ public class LoginServlet extends HttpServlet {
                 if (userName.equals("admin") && password.equals("123")) {
                     response.addCookie(new Cookie("isLogin", "true"));
                     request.setAttribute("username", "admin");
-                    RequestDispatcher view = request.getRequestDispatcher("WEB-INF/chatPage.jsp");
+                    RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
                     view.forward(request, response);
                 }
                 else if (userName.equals("admin2") && password.equals("123")) {
                     response.addCookie(new Cookie("isLogin", "true"));
                     request.setAttribute("username", "admin2");
-                    RequestDispatcher view = request.getRequestDispatcher("WEB-INF/chatPage.jsp");
+                    RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
                     view.forward(request, response);
                 }
                 else {
