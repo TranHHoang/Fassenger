@@ -94,7 +94,7 @@ public class RegisterServlet extends HttpServlet {
         byte[] image = uploadFile(request);
         UserManagement userManagement = new UserManagement(dao);
         
-        userManagement.addUser(new User(password, userName, userName, password, image));
+        userManagement.addUser(new User(userName, userName, password, image));
         request.setAttribute("message", "Register successful");
         RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
         view.forward(request, response);
