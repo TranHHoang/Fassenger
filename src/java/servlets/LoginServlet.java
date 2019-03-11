@@ -104,7 +104,7 @@ public class LoginServlet extends HttpServlet {
         User user = userManagement.getUserByName(userName);
         
         if (user != null && user.getPassword().equals(password)) {
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(true);
             session.setAttribute("userName", userName);
             RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
             view.forward(request, response);

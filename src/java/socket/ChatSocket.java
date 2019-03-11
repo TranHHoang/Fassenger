@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import javax.servlet.http.HttpSession;
+import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -20,33 +22,35 @@ import javax.websocket.Session;
  *
  * @author TranHoang
  */
-@ServerEndpoint("/chatroom")
+@ServerEndpoint(value = "/chatroom", configurator = GetHttpSessionConfigurator.class)
 public class ChatSocket {
     
-    static Set<Session> users = Collections.synchronizedSet(new HashSet<>());
+    static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
 
     @OnOpen
-    public void onOpen(Session session) {
-        users.add(session);
+    public void onOpen(Session session, EndpointConfig config) {
+        HttpSession httpSession = (HttpSession)config.getUserProperties().get(HttpSession.class.getName());
+        
+        if (httpSession.getAttribute("userName") != null) {
+            session.getUserProperties().put("userName", httpSession.getAttribute("userName").toString());
+//            session.getUserProperties().put("nickName", httpSession.getAttribute("nickName").toString());
+            userList.add(session);
+        }
     }
 
     @OnMessage
     public void onMessage(String message, Session userSession) throws IOException {
-        String username = (String) userSession.getUserProperties().get("userName");
-        if (username == null) {
-            userSession.getUserProperties().put("userName", message);
-            userSession.getBasicRemote().sendText("System: you are connected as " + message);
-        } else {
-            for (Session session : users) {
-                session.getBasicRemote().sendText(username + ": " + message);
-            }
+        String username = userSession.getUserProperties().get("userName").toString();
+        for (Session session : userList) {
+            session.getBasicRemote().sendText(username + ": " + message);
         }
     }
 
     @OnClose
     public void onClose(Session session) throws IOException {
-        users.remove(session);
-        for (Session s : users) {
+        userList.remove(session);
+        
+        for (Session s : userList) {
             s.getBasicRemote().sendText(session.getUserProperties().get("userName") + " offline");
         }
     }
