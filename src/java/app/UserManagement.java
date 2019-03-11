@@ -15,10 +15,6 @@ public class UserManagement {
         return dao.getAllUser();
     }
     
-    public User getUserById(String id) {
-        return dao.getUserById(id);
-    }
-    
     public User getUserByName(String name){
         return dao.getUserByName(name);
     }
@@ -27,4 +23,7 @@ public class UserManagement {
         dao.addUser(u);
     }
     
+    public void editUserByName(User user) {
+        dao.editUserByName(user);
+    }
 }
