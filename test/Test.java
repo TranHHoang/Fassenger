@@ -18,7 +18,7 @@ public class Test {
     public static void main(String[] args) {
         try {
             DatabaseDao dao = new DatabaseDao(new DBContext());
-            System.out.println("got : " + dao.getUserByName("admin").getId());
+            System.out.println("got : " + dao.getUserByName("admin").getPassword());
         } catch (Exception ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }

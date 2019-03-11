@@ -11,7 +11,6 @@ package models;
  */
 public class User {
 
-    private String id;
     private String name;
     private String nickname;
     private String password;
@@ -20,20 +19,12 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String nickName, String password, byte[] image) {
-        this.id = id;
+    public User(String name, String nickName, String password, byte[] image) {
+
         this.name = name;
         this.nickname = nickName;
         this.password = password;
         this.avatar = image;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {

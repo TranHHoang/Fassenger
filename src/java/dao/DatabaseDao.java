@@ -32,7 +32,6 @@ public class DatabaseDao {
 
             while (rs.next()) {
                 userList.add(new User(
-                        rs.getString(UserTable.ID),
                         rs.getString(UserTable.USER_NAME),
                         rs.getNString(UserTable.NICK_NAME),
                         rs.getString(UserTable.PASSWORD),
@@ -56,7 +55,6 @@ public class DatabaseDao {
             rs.next();
 
             return new User(
-                    rs.getString(UserTable.ID),
                     rs.getString(UserTable.USER_NAME),
                     rs.getNString(UserTable.NICK_NAME),
                     rs.getString(UserTable.PASSWORD),
@@ -69,23 +67,21 @@ public class DatabaseDao {
         return null;
     }
 
-    public void editUserById(User user) {
+    public void editUserByName(User user) {
         try {
-            String sql = String.format("update %s set %s = ?, %s = ?, %s = ?, %s = ? where %s = ?",
+            String sql = String.format("update %s set %s = ?, %s = ?, %s = ? where %s = ?",
                     DatabaseTable.USER_TABLE,
-                    UserTable.USER_NAME,
                     UserTable.NICK_NAME,
                     UserTable.PASSWORD,
                     UserTable.AVATAR,
-                    UserTable.ID);
+                    UserTable.USER_NAME);
 
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setString(1, user.getName());
-            statement.setNString(2, user.getNickName());
-            statement.setString(3, user.getPassword());
-            statement.setBytes(4, user.getImage());
-            statement.setString(5, user.getId());
+            statement.setNString(1, user.getNickName());
+            statement.setString(2, user.getPassword());
+            statement.setBytes(3, user.getImage());
+            statement.setString(4, user.getName());
 
             statement.executeUpdate();
         } catch (Exception e) {
@@ -113,18 +109,17 @@ public class DatabaseDao {
     public User getUserByName(String name) {
         try {
             String sql = "select * from " + DatabaseTable.USER_TABLE + " where " + UserTable.USER_NAME + " = ?";
-            
+
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setString(1, name);
-            
+
             ResultSet rs = pst.executeQuery();
             rs.next();
-            
+
             return new User(
-                    rs.getString(UserTable.ID), 
-                    rs.getString(UserTable.USER_NAME), 
-                    rs.getString(UserTable.NICK_NAME), 
-                    rs.getString(UserTable.PASSWORD), 
+                    rs.getString(UserTable.USER_NAME),
+                    rs.getString(UserTable.NICK_NAME),
+                    rs.getString(UserTable.PASSWORD),
                     rs.getBytes(UserTable.AVATAR));
 
         } catch (Exception e) {
