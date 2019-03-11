@@ -12,7 +12,7 @@
         <title>Chat page</title>
 
         <script src="./scripts/chatroom.js"></script>
-        <script>openConnection("${username}")</script>
+        <script>openConnection("${userName}")</script>
         <!--fix this change to dynamic-->
     </head>
     <body>
