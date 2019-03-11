@@ -29,6 +29,7 @@
                 File: <input type="file" name="avatar" accept="image/*"/>
                 <input type="submit" name="action" value="create" />
             </form>
+            <h1>${message}</h1>
         </body>
 
     

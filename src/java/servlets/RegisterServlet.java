@@ -5,15 +5,22 @@
  */
 package servlets;
 
+import app.UserManagement;
+import dao.DatabaseDao;
+import dao.context.DBContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import models.User;
 
 /**
  *
@@ -74,32 +81,52 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        DBContext dbContext = new DBContext();
+        DatabaseDao dao = null;       
+        try {
+            dao = new DatabaseDao(dbContext);
+        } catch (Exception ex) {
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
-        ArrayList<Byte> image = uploadFile(request);
+        byte[] image = uploadFile(request);
+        UserManagement userManagement = new UserManagement(dao);
         
+        userManagement.addUser(new User(password, userName, userName, password, image));
+        request.setAttribute("message", "Register successful");
+        RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
+        view.forward(request, response);
     }
 
     
-    private ArrayList<Byte> uploadFile(HttpServletRequest request) throws IOException, ServletException {
+    private byte[] uploadFile(HttpServletRequest request) throws IOException, ServletException {
         String fileName = "";
-        ArrayList<Byte> image = new ArrayList<>();
+        ArrayList<Byte> tempImage = new ArrayList<>();
         try {
             Part filePart = request.getPart("avatar");
             fileName = (String) getFileName(filePart);
             InputStream fileContent = filePart.getInputStream();
 
             int data = fileContent.read();
+            System.out.println(fileContent);
             while (data != -1) {
                 data = fileContent.read();
-                image.add((byte) data);
+                tempImage.add((byte) data);
             }
             fileContent.close();
 
         } catch (Exception e) {
             fileName = "";
         }
-        return image;
+        
+        byte [] temp = new byte[tempImage.size()];
+        for (int i = 0; i < tempImage.size(); i++) {
+            temp[i] = tempImage.get(i);
+        }
+        
+        return temp;
     }
 
     private String getFileName(Part part) {
