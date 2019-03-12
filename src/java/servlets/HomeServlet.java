@@ -70,10 +70,9 @@ public class HomeServlet extends HttpServlet {
                 //userName not found
                 System.out.println(e);
             }
-            RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
-            view.forward(request, response);
-            
-            
+//            RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
+//            view.forward(request, response);
+            response.sendRedirect("./");
     }
 
     /**

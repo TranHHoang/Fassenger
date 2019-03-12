@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {        
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
         try {
             if (session.getAttribute("userName") != null) {
@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
                 view.forward(request, response);
             }
         } catch (Exception e) {
-          response.sendRedirect("./"); // userName == null
+            response.sendRedirect("./"); // userName == null
         }
         response.sendRedirect("./"); // wrong username + password
     }
@@ -53,14 +53,13 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         User user = userManagement.getUserByName(userName);
-        
+
         if (user != null && user.getPassword().equals(password)) {
             HttpSession session = request.getSession();
-            session.setMaxInactiveInterval(1*60);
+            session.setMaxInactiveInterval(1 * 60);
             session.setAttribute("nickName", user.getNickName());
             session.setAttribute("userName", userName);
-            response.sendRedirect("./");
-
+            response.sendRedirect("./room");
         } else {
             response.sendRedirect("./");
         }
