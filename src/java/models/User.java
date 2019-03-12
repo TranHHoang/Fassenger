@@ -24,7 +24,6 @@ public class User {
     }
     
     public User(String name, String nickName, String password, byte[] image) {
-
         this.name = name;
         this.nickname = nickName;
         this.password = password;

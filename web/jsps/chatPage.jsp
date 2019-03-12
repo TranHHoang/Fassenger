@@ -33,6 +33,10 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="./styles/style.css">
+        <script
+            src="http://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
     </head>
     <body>
         <!--<input id="textMessage" type="text" />-->
@@ -67,8 +71,12 @@
 
                             <div class="col">
                                 <h5 class="card-title text-center">User</h5>
-                                <button title="Change avatar" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-upload"></i></button>
-                                <button title="Logout" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-sign-out-alt"></i></button>
+                                <form action="room" method="POST" enctype="multipart/form-data" style="display: none">
+                                    <input id="input-btn" name="avatar" type="file">
+                                    <input id="clickHere" type="submit">
+                                </form>
+                                <button onclick="clickBtn()" title="Change avatar" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-upload"></i></button>
+                                <a href="logout"><button id="logoutBtn" title="Logout" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-sign-out-alt"></i></button><a/>
                             </div>
                         </div>
                     </div>
@@ -76,6 +84,16 @@
             </div>
         </div>
 
-
+        <script>
+            function clickBtn(){
+                document.getElementById("input-btn").click()
+            }
+            
+            $("#input-btn").change(function(e) {
+                ${"clickHere"}.click()
+            });
+            
+        </script>
+        
     </body>
 </html>

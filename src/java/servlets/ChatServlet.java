@@ -5,14 +5,25 @@
  */
 package servlets;
 
+import app.UserManagement;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
+import dao.DatabaseDao;
+import dao.context.DBContext;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import models.User;
 
 /**
  *
@@ -84,14 +95,71 @@ public class ChatServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+            HttpSession session = request.getSession();
+            byte[] image = uploadFile(request);
+    
+            DBContext dbContext = new DBContext();
+            DatabaseDao dao = null;       
+            try {
+                dao = new DatabaseDao(dbContext);
+            } catch (Exception ex) {
+                Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            UserManagement userManagement = new UserManagement(dao);
+            User original = userManagement.getUserByName(session.getAttribute("userName").toString());
+            User temp = new User(original.getName(), original.getNickName(), original.getPassword(), image);
+            userManagement.editUserByName(temp);
     }
+    
 
     /**
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description
      */
+    
+    
+    
+    private byte[] uploadFile(HttpServletRequest request) throws IOException, ServletException {
+        String fileName = "";
+        ArrayList<Byte> tempImage = new ArrayList<>();
+        try {
+            Part filePart = request.getPart("avatar");
+            fileName = (String) getFileName(filePart);
+            InputStream fileContent = filePart.getInputStream();
+
+            int data = fileContent.read();
+            while (data != -1) {
+                data = fileContent.read();
+                tempImage.add((byte) data);
+            }
+            fileContent.close();
+
+        } catch (Exception e) {
+            fileName = "";
+            System.out.println(e);
+        }
+        
+        byte [] temp = new byte[tempImage.size()];
+        for (int i = 0; i < tempImage.size(); i++) {
+            temp[i] = tempImage.get(i);
+        }
+        
+        return temp;
+    }
+
+    private String getFileName(Part part) {
+        final String partHeader = part.getHeader("content-disposition");
+        System.out.println("*****partHeader :" + partHeader);
+        for (String content : part.getHeader("content-disposition").split(";")) {
+            if (content.trim().startsWith("filename")) {
+                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+
+        return null;
+    }
+    
     @Override
     public String getServletInfo() {
         return "Short description";
