@@ -3,6 +3,54 @@
     --input-padding-y: .75rem;
 }
 
+.small-ava {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: white;
+    display: inline-block;
+}
+
+.date {
+    padding: .5rem;
+    font-size: 75%;
+}
+
+.chat-bubble-right {
+    background: #0062E6;
+    border-radius: 3rem;
+    padding: .75rem;
+    color: white;
+    margin-right: .5rem;
+
+}
+
+.chat-bubble-left {
+    background: #FAFAFA;
+    border-radius: 3rem;
+    padding: .75rem;
+    text-align: left;
+    margin-left: .5rem;
+}
+
+.chat-bubble-container-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    margin: .1rem;
+    text-align: right;
+}
+
+.chat-bubble-container-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    margin: .1rem;
+    text-align: left;
+}
+
 .page-title {
     text-align: center;
     margin-top: 1rem;

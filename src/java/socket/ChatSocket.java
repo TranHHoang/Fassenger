@@ -6,16 +6,20 @@
 package socket;
 
 import app.MessageManagement;
+import app.UserManagement;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.http.HttpSession;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
@@ -44,6 +48,8 @@ public class ChatSocket {
             session.getUserProperties().put("nickName", httpSession.getAttribute("nickName").toString());
             userList.add(session);
 
+            String userName = httpSession.getAttribute("userName").toString();
+
             // Load previous history to chat
             try {
                 // Put message to DAO
@@ -51,16 +57,48 @@ public class ChatSocket {
                 MessageManagement mm = new MessageManagement(new DatabaseDao(context));
 
                 List<Message> messages = mm.getMessagesBeforeDate(100, new Date());
-                
+
                 for (Message message : messages) {
-                    session.getBasicRemote().sendText(message.getName() + ": " + message.getTextContent());
+                    session.getBasicRemote().sendText(createMessageObj(message, message.getName().equals(userName)).toString());
                 }
-                
+
                 System.out.println(messages.size());
             } catch (Exception ex) {
                 // Error exception
+                ex.printStackTrace();
             }
         }
+    }
+
+    private JsonObject createMessageObj(Message msg, boolean isSender) throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(new Date());
+        cal2.setTime(msg.getDateCreated());
+        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+
+        String datePattern = "hh:mm a";
+        if (!sameDay) {
+            datePattern = "dd/MM/yy 'at' " + datePattern;
+        }
+
+        byte[] ava = new byte[0];
+
+        if (!isSender) {
+            DBContext context = new DBContext();
+            UserManagement um = new UserManagement(new DatabaseDao(context));
+            ava = um.getUserByName(msg.getName()).getImage();
+        }
+
+        return Json.createObjectBuilder()
+                .add("isSender", isSender)
+                .add("user", msg.getName())
+                .add("avatar", Base64.encode(ava))
+                .add("date", new SimpleDateFormat(datePattern).format(msg.getDateCreated()))
+                .add("image", Base64.encode(msg.getImageContent() == null ? new byte[0] : msg.getImageContent()))
+                .add("text", msg.getTextContent())
+                .build();
     }
 
     @OnMessage
@@ -68,19 +106,21 @@ public class ChatSocket {
         String userName = userSession.getUserProperties().get("userName").toString();
         String nickName = userSession.getUserProperties().get("nickName").toString();
 
+        Message messageObj = new Message(userName, new Date(), null, message);
+
         try {
             // Put message to DAO
             DBContext context = new DBContext();
             MessageManagement mm = new MessageManagement(new DatabaseDao(context));
 
-            mm.addMessage(new Message(userName, new Date(), null, message));
-            System.out.println(message);
-        } catch (Exception ex) {
-            // Error exception
-        }
+            mm.addMessage(messageObj);
 
-        for (Session session : userList) {
-            session.getBasicRemote().sendText(nickName + ": " + message);
+            for (Session session : userList) {
+                session.getBasicRemote().sendText(createMessageObj(messageObj,
+                        session.getUserProperties().get("userName").equals(userName)).toString());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

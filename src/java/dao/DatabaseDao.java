@@ -141,7 +141,7 @@ public class DatabaseDao {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 result.add(new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
-                        new java.util.Date(rs.getDate(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
+                        new java.util.Date(rs.getTimestamp(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
                         rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT),
                         rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT)));
             }

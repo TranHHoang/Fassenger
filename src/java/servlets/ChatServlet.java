@@ -68,8 +68,9 @@ public class ChatServlet extends HttpServlet {
         } catch (Exception e) {
             //userName not found
             System.out.println(e);
+            response.sendRedirect("./");
+
         }
-        response.sendRedirect("./");
     }
 
     /**
