@@ -33,14 +33,14 @@ public class ChatSocket {
         
         if (httpSession.getAttribute("userName") != null) {
             session.getUserProperties().put("userName", httpSession.getAttribute("userName").toString());
-//            session.getUserProperties().put("nickName", httpSession.getAttribute("nickName").toString());
+            session.getUserProperties().put("nickName", httpSession.getAttribute("nickName").toString());
             userList.add(session);
         }
     }
 
     @OnMessage
     public void onMessage(String message, Session userSession) throws IOException {
-        String username = userSession.getUserProperties().get("userName").toString();
+        String username = userSession.getUserProperties().get("nickName").toString();
         for (Session session : userList) {
             session.getBasicRemote().sendText(username + ": " + message);
         }

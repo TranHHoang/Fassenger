@@ -5,7 +5,6 @@ import dao.DatabaseTable.UserTable;
 import dao.context.DBContext;
 import models.User;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -176,32 +175,32 @@ public class DatabaseDao {
 
     public void deleteUserOnline(String userName) {
         try {
-            String sql = "delete " + DatabaseTable.USER_ONLINE_TABLE + 
-                        " where " + DatabaseTable.UserOnlineTable.USER_NAME + " =  ? ";
+            String sql = "delete " + DatabaseTable.USER_ONLINE_TABLE
+                    + " where " + DatabaseTable.UserOnlineTable.USER_NAME + " =  ? ";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setString(1, userName);
             pst.executeUpdate();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public boolean isUserOnline(String name){
+
+    public boolean isUserOnline(String name) {
         ArrayList<User> users = new ArrayList<>();
-        try{
-            
-            String sql = "select * from "+DatabaseTable.USER_ONLINE_TABLE+
-                        " where "+DatabaseTable.UserOnlineTable.USER_NAME+"= ?";
+        try {
+
+            String sql = "select * from " + DatabaseTable.USER_ONLINE_TABLE
+                    + " where " + DatabaseTable.UserOnlineTable.USER_NAME + "= ?";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setString(1, name);
             ResultSet rs = pst.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 users.add(new User(rs.getString(DatabaseTable.UserOnlineTable.USER_NAME)));
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if(users.size() > 0){
+        if (users.size() > 0) {
             return true;
         }
         return false;

@@ -14,7 +14,8 @@ import models.User;
  * @author LEGION
  */
 public class UserOnlineManagement {
-    DatabaseDao dao ;
+
+    DatabaseDao dao;
 
     public UserOnlineManagement() {
     }
@@ -22,17 +23,20 @@ public class UserOnlineManagement {
     public UserOnlineManagement(DatabaseDao dao) {
         this.dao = dao;
     }
-    
-    public ArrayList<User> getAllOnlineUser(){
+
+    public ArrayList<User> getAllOnlineUser() {
         return dao.getAllUserOnline();
     }
-    public void addOnlineUser(String userName){
+
+    public void addOnlineUser(String userName) {
         dao.addUserOnline(userName);
     }
-    public void deleteOnlineUser(String userName){
+
+    public void deleteOnlineUser(String userName) {
         dao.deleteUserOnline(userName);
     }
-    public boolean isUserOnline (String userName){
+
+    public boolean isUserOnline(String userName) {
         return dao.isUserOnline(userName);
-    }    
+    }
 }

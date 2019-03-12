@@ -15,6 +15,7 @@ import models.Message;
  * @author LEGION
  */
 public class MessageManagement {
+
     DatabaseDao dao;
 
     public MessageManagement() {
@@ -23,12 +24,12 @@ public class MessageManagement {
     public MessageManagement(DatabaseDao dao) {
         this.dao = dao;
     }
-    
-    public void addMessage(Message msg){
+
+    public void addMessage(Message msg) {
         dao.addMessage(msg);
     }
-    
-    public ArrayList<Message> getMessagesBeforeDate(int numOfMess , Date lastDate){
+
+    public ArrayList<Message> getMessagesBeforeDate(int numOfMess, Date lastDate) {
         return dao.getMessagesBeforeDate(numOfMess, lastDate);
     }
 }
