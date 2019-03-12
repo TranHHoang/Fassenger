@@ -1,13 +1,16 @@
 package dao;
 
+import dao.DatabaseTable.MessageTable;
 import dao.DatabaseTable.UserTable;
 import dao.context.DBContext;
 import models.User;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import models.Message;
 
 /**
  *
@@ -106,4 +109,40 @@ public class DatabaseDao {
         return null;
     }
 
+    /* sql query for Fassenger Message table*/
+    public void addMessage(Message msg) {
+        try {
+            String sql = "insert into " + DatabaseTable.MESSAGE_TABLE + " values (NEWID(), ?, ?,?,?)";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(MessageTable.ColumnOrder.USER_NAME.ordinal(), msg.getName());
+            pst.setDate(MessageTable.ColumnOrder.DATE_CREATED.ordinal(), new java.sql.Date(msg.getDateCreated().getTime()));
+            pst.setBytes(MessageTable.ColumnOrder.IMAGE_CONTENT.ordinal(), msg.getImageContent());
+            pst.setString(MessageTable.ColumnOrder.TEXT_CONTENT.ordinal(), msg.getTextContent());
+            pst.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Message> getMessagesBeforeDate(int numberOfMess, java.util.Date lastDate) {
+        ArrayList<Message> result = new ArrayList<>();
+        try {
+            String sql = "select top (?) * from " + DatabaseTable.MESSAGE_TABLE
+                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + " < ?";
+
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setInt(1, numberOfMess);
+            pst.setDate(2, new java.sql.Date(lastDate.getTime()));
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                result.add(new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
+                        new java.util.Date(rs.getDate(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
+                        rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT), 
+                        rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
