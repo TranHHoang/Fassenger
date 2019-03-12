@@ -19,7 +19,6 @@
         <input id="textMessage" type="text" />
         <input onclick="sendMessage()" value="Send Message" type="button" /> <br/><br/>
         <textarea id="textAreaMessage" rows="10" cols="50"></textarea>
-
-
+        <a href="logout">Sign out</a>
     </body>
 </html>
