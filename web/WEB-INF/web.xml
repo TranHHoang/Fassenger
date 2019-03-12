@@ -15,7 +15,7 @@
     </servlet>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>servlets.HomeServlet</servlet-class>
+        <servlet-class>servlets.ChatServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Kiruu
  */
-public class HomeServlet extends HttpServlet {
+public class ChatServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,7 +37,7 @@ public class HomeServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeServlet</title>");            
+            out.println("<title>Servlet HomeServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet HomeServlet at " + request.getContextPath() + "</h1>");
@@ -58,21 +58,18 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            HttpSession session = request.getSession();
-            try {
-                String userName = session.getAttribute("userName").toString();
-                if (userName != null) {
-                    RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
-                    view.forward(request, response);
-                }
-            }    
-            catch(Exception e) {
-                //userName not found
-                System.out.println(e);
+        HttpSession session = request.getSession();
+        try {
+            String userName = session.getAttribute("userName").toString();
+            if (userName != null) {
+                RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
+                view.forward(request, response);
             }
-//            RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
-//            view.forward(request, response);
-            response.sendRedirect("./");
+        } catch (Exception e) {
+            //userName not found
+            System.out.println(e);
+        }
+        response.sendRedirect("./");
     }
 
     /**

@@ -18,9 +18,6 @@ public class MessageManagement {
 
     DatabaseDao dao;
 
-    public MessageManagement() {
-    }
-
     public MessageManagement(DatabaseDao dao) {
         this.dao = dao;
     }
