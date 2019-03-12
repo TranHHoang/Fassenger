@@ -45,28 +45,6 @@ public class DatabaseDao {
         return userList;
     }
 
-    public User getUserById(String id) {
-        try {
-            String sql = "select * from " + DatabaseTable.USER_TABLE;
-
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet rs = statement.executeQuery();
-
-            rs.next();
-
-            return new User(
-                    rs.getString(UserTable.USER_NAME),
-                    rs.getNString(UserTable.NICK_NAME),
-                    rs.getString(UserTable.PASSWORD),
-                    rs.getBytes(UserTable.AVATAR)
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public void editUserByName(User user) {
         try {
             String sql = String.format("update %s set %s = ?, %s = ?, %s = ? where %s = ?",
