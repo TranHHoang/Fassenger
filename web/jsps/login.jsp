@@ -116,12 +116,12 @@
                                 <form class="form-signin" action="register" method="POST">
 
                                     <div class="form-label-group">
-                                        <input type="text" id="inputUserNameSignUp" class="form-control" placeholder="Username" required>
+                                        <input name="userName" type="text" id="inputUserNameSignUp" class="form-control" placeholder="Username" required>
                                         <label for="inputUserNameSignUp">Username</label>
                                     </div>
 
                                     <div class="form-label-group">
-                                        <input type="password" id="inputPasswordSignUp" class="form-control" placeholder="Password" required>
+                                        <input name="password" type="password" id="inputPasswordSignUp" class="form-control" placeholder="Password" required>
                                         <label for="inputPasswordSignUp">Password</label>
                                     </div>
 

@@ -91,7 +91,9 @@ public class RegisterServlet extends HttpServlet {
         }
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
-        byte[] image = uploadFile(request);
+//        byte[] image = uploadFile(request);
+        byte[] image = null;
+        
         UserManagement userManagement = new UserManagement(dao);
         
         userManagement.addUser(new User(userName, userName, password, image));
@@ -101,45 +103,45 @@ public class RegisterServlet extends HttpServlet {
     }
 
     
-    private byte[] uploadFile(HttpServletRequest request) throws IOException, ServletException {
-        String fileName = "";
-        ArrayList<Byte> tempImage = new ArrayList<>();
-        try {
-            Part filePart = request.getPart("avatar");
-            fileName = (String) getFileName(filePart);
-            InputStream fileContent = filePart.getInputStream();
-
-            int data = fileContent.read();
-            System.out.println(fileContent);
-            while (data != -1) {
-                data = fileContent.read();
-                tempImage.add((byte) data);
-            }
-            fileContent.close();
-
-        } catch (Exception e) {
-            fileName = "";
-        }
-        
-        byte [] temp = new byte[tempImage.size()];
-        for (int i = 0; i < tempImage.size(); i++) {
-            temp[i] = tempImage.get(i);
-        }
-        
-        return temp;
-    }
-
-    private String getFileName(Part part) {
-        final String partHeader = part.getHeader("content-disposition");
-        System.out.println("*****partHeader :" + partHeader);
-        for (String content : part.getHeader("content-disposition").split(";")) {
-            if (content.trim().startsWith("filename")) {
-                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-
-        return null;
-    }
+//    private byte[] uploadFile(HttpServletRequest request) throws IOException, ServletException {
+//        String fileName = "";
+//        ArrayList<Byte> tempImage = new ArrayList<>();
+//        try {
+//            Part filePart = request.getPart("avatar");
+//            fileName = (String) getFileName(filePart);
+//            InputStream fileContent = filePart.getInputStream();
+//
+//            int data = fileContent.read();
+//            System.out.println(fileContent);
+//            while (data != -1) {
+//                data = fileContent.read();
+//                tempImage.add((byte) data);
+//            }
+//            fileContent.close();
+//
+//        } catch (Exception e) {
+//            fileName = "";
+//        }
+//        
+//        byte [] temp = new byte[tempImage.size()];
+//        for (int i = 0; i < tempImage.size(); i++) {
+//            temp[i] = tempImage.get(i);
+//        }
+//        
+//        return temp;
+//    }
+//
+//    private String getFileName(Part part) {
+//        final String partHeader = part.getHeader("content-disposition");
+//        System.out.println("*****partHeader :" + partHeader);
+//        for (String content : part.getHeader("content-disposition").split(";")) {
+//            if (content.trim().startsWith("filename")) {
+//                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+//            }
+//        }
+//
+//        return null;
+//    }
 
     /**
      * Returns a short description of the servlet.
