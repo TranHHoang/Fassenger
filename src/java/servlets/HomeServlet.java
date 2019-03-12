@@ -60,9 +60,9 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
             HttpSession session = request.getSession();
             try {
-                String userName = (String) session.getAttribute("userName");
-                if (userName == null) {
-                    RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
+                String userName = session.getAttribute("userName").toString();
+                if (userName != null) {
+                    RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
                     view.forward(request, response);
                 }
             }    
@@ -70,7 +70,7 @@ public class HomeServlet extends HttpServlet {
                 //userName not found
                 System.out.println(e);
             }
-            RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
             view.forward(request, response);
             
             
