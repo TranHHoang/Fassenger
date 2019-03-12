@@ -13,7 +13,7 @@ public class DatabaseTable {
 
     public static final String USER_TABLE = "FassengerUser";
     public static final String MESSAGE_TABLE="FassengerMessage";
-    
+    public static final String USER_ONLINE_TABLE="UserOnline";
     public static class UserTable {
 
         public static final String ID = "Id";
@@ -33,5 +33,8 @@ public class DatabaseTable {
         public static enum ColumnOrder {
             ID, USER_NAME, DATE_CREATED, IMAGE_CONTENT, TEXT_CONTENT
         }
+    }
+    public static class UserOnlineTable{
+        public static final String USER_NAME = "UserName";
     }
 }

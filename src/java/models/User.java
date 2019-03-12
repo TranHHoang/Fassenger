@@ -19,6 +19,10 @@ public class User {
     public User() {
     }
 
+    public User(String name) {
+        this.name = name;
+    }
+    
     public User(String name, String nickName, String password, byte[] image) {
 
         this.name = name;

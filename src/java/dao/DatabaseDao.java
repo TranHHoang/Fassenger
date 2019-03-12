@@ -137,12 +137,73 @@ public class DatabaseDao {
             while (rs.next()) {
                 result.add(new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
                         new java.util.Date(rs.getDate(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
-                        rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT), 
+                        rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT),
                         rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT)));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /*the following code is for user online table*/
+    public ArrayList<User> getAllUserOnline() {
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            String sql = "select " + DatabaseTable.UserOnlineTable.USER_NAME
+                    + " from " + DatabaseTable.USER_ONLINE_TABLE;
+            PreparedStatement pst = connection.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                users.add(new User(rs.getString(1)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public void addUserOnline(String userName) {
+        try {
+            String sql = "insert into " + DatabaseTable.USER_ONLINE_TABLE + " values(?)";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, userName);
+            pst.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteUserOnline(String userName) {
+        try {
+            String sql = "delete " + DatabaseTable.USER_ONLINE_TABLE + 
+                        " where " + DatabaseTable.UserOnlineTable.USER_NAME + " =  ? ";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, userName);
+            pst.executeUpdate();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public boolean isUserOnline(String name){
+        ArrayList<User> users = new ArrayList<>();
+        try{
+            
+            String sql = "select * from "+DatabaseTable.USER_ONLINE_TABLE+
+                        " where "+DatabaseTable.UserOnlineTable.USER_NAME+"= ?";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, name);
+            ResultSet rs = pst.executeQuery();
+            while(rs.next()){
+                users.add(new User(rs.getString(DatabaseTable.UserOnlineTable.USER_NAME)));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        if(users.size() > 0){
+            return true;
+        }
+        return false;
     }
 }
