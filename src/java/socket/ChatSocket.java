@@ -37,7 +37,8 @@ import models.Message;
 @ServerEndpoint(value = "/chatroom", configurator = GetHttpSessionConfigurator.class)
 public class ChatSocket {
 
-    static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
+    private static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
+    private String lastUserName = null;
 
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) {

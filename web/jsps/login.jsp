@@ -77,12 +77,12 @@
                             <rect x="0" y="0" width="64" height="64" fill="#fff"/>
                             <text text-anchor="middle" x="32" y="32" dy="10" style="font-weight: bold">Fa</text>
                         </mask>
-                        <rect fill="white" x="0" y="0" rx="32" width="64" height="64" mask="url(#mask)" fill-opacity="1"/>    
+                        <rect fill="white" x="0" y="0" rx="32" width="64" height="64" mask="url(#mask)" fill-opacity="0.75"/>    
                         </svg><b style="margin-left: 2px">ssenger</b>
                         <sub>global chat <i class="fas fa-comments"></i></sub>
                     </h2>
 
-                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.95);">
+                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.75);">
 
                         <div class="card-body">
                             <div class="col-lg">

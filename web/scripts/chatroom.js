@@ -17,9 +17,16 @@ function openConnection() {
             let date = document.createElement('span');
             let avatar = document.createElement('span');
             let avaImg = document.createElement('img');
+            
+            avaImg.title = responseObj.user;
             avaImg.src = "./ava/" + responseObj.user;
             avaImg.style.width = "100%";
             avaImg.classList.add('small-ava');
+            // Hide avatar of the last message if they are from the same person
+            let lastUser = $("#chatBox").last().children().last().children(".small-ava").children().attr("title");
+            if (lastUser === responseObj.user) {
+                $("#chatBox").last().children().last().children(".small-ava").css("visibility", "hidden");
+            }
 
             chatBubble.innerHTML = responseObj.text;
             date.innerHTML = responseObj.date;
