@@ -21,7 +21,7 @@ public class Test {
 
     public static void main(String[] args) {
         try {
-            DatabaseDao dao = new DatabaseDao(new DBContext());
+            DatabaseDao dao = DatabaseDao.getInstance(DBContext.getInstance());
             System.out.println("is admin exist in the online user :"+dao.isUserOnline("admin"));
             
         } catch (Exception ex) {

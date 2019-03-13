@@ -77,17 +77,28 @@
                             <rect x="0" y="0" width="64" height="64" fill="#fff"/>
                             <text text-anchor="middle" x="32" y="32" dy="10" style="font-weight: bold">Fa</text>
                         </mask>
-                        <rect fill="white" x="0" y="0" rx="32" width="64" height="64" mask="url(#mask)" fill-opacity="1"/>    
+                        <rect fill="white" x="0" y="0" rx="32" width="64" height="64" mask="url(#mask)" fill-opacity="0.75"/>    
                         </svg><b style="margin-left: 2px">ssenger</b>
                         <sub>global chat <i class="fas fa-comments"></i></sub>
                     </h2>
 
-                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.95);">
+                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.75);">
 
                         <div class="card-body">
                             <div class="col-lg">
                                 <h5 class="card-title text-center"><i class="far fa-user"></i> Sign In</h5>
                                 <form class="form-signin" action="login" method="POST">
+
+                                    <c:if test="${not empty status}">
+                                        <c:choose>
+                                            <c:when test="${status == 'SUCCESS'}">
+                                                <div class="alert alert-success">${message}</div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="alert alert-danger">${message}</div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:if>
 
                                     <div class="form-label-group">
                                         <input type="text" id="inputUserNameSignIn" name="userName" class="form-control" placeholder="Username" required autofocus>

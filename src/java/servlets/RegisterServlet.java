@@ -45,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");            
+            out.println("<title>Servlet RegisterServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
@@ -66,7 +66,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         processRequest(request, response);
     }
 
@@ -81,25 +81,26 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        DBContext dbContext = new DBContext();
-        DatabaseDao dao = null;       
+
+        DatabaseDao dao = null;
         try {
-            dao = new DatabaseDao(dbContext);
+            dao = DatabaseDao.getInstance(DBContext.getInstance());
+
         } catch (Exception ex) {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
-        
+
         UserManagement userManagement = new UserManagement(dao);
-        
+
         userManagement.addUser(new User(userName, userName, password, null));
-        request.setAttribute("message", "Register successful");
+
+        request.setAttribute("status", "SUCCESS");
+        request.setAttribute("message", "Register successful! You can now sign in.");
         RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
         view.forward(request, response);
     }
-
 
     /**
      * Returns a short description of the servlet.

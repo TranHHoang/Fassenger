@@ -37,7 +37,8 @@ import models.Message;
 @ServerEndpoint(value = "/chatroom", configurator = GetHttpSessionConfigurator.class)
 public class ChatSocket {
 
-    static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
+    private static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
+    private String lastUserName = null;
 
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) {
@@ -53,8 +54,7 @@ public class ChatSocket {
             // Load previous history to chat
             try {
                 // Put message to DAO
-                DBContext context = new DBContext();
-                MessageManagement mm = new MessageManagement(new DatabaseDao(context));
+                MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
 
                 List<Message> messages = mm.getMessagesBeforeDate(100, new Date());
 
@@ -101,8 +101,7 @@ public class ChatSocket {
 
         try {
             // Put message to DAO
-            DBContext context = new DBContext();
-            MessageManagement mm = new MessageManagement(new DatabaseDao(context));
+            MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
 
             mm.addMessage(messageObj);
 

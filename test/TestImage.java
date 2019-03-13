@@ -17,19 +17,20 @@ import javax.swing.ImageIcon;
  *
  * @author TranHoang
  */
-public class NewJFrame extends javax.swing.JFrame {
+public class TestImage extends javax.swing.JFrame {
 
     /**
      * Creates new form NewJFrame
      */
-    public NewJFrame() {
+    public TestImage() {
         initComponents();
 
-        DBContext context = new DBContext();
         try {
-            UserManagement um = new UserManagement(new DatabaseDao(context));
+            DatabaseDao dao = DatabaseDao.getInstance(DBContext.getInstance());
 
-            InputStream ava = um.getUserByName("admin3").getAvatar();
+            UserManagement um = new UserManagement(dao);
+
+            InputStream ava = um.getUserByName("admin").getAvatar();
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             int read;
@@ -37,12 +38,12 @@ public class NewJFrame extends javax.swing.JFrame {
             while ((read = ava.read(data, 0, data.length)) != -1) {
                 buffer.write(data, 0, read);
             }
-            
+
             buffer.flush();
             jLabel1.setIcon(new ImageIcon(buffer.toByteArray()));
 
         } catch (Exception ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TestImage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -67,15 +68,15 @@ public class NewJFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(347, Short.MAX_VALUE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(jLabel1)
-                .addContainerGap(229, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -98,20 +99,21 @@ public class NewJFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TestImage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TestImage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TestImage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TestImage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewJFrame().setVisible(true);
+                new TestImage().setVisible(true);
             }
         });
     }

@@ -39,11 +39,10 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DBContext dbContext = new DBContext();
         DatabaseDao dao = null;
 
         try {
-            dao = new DatabaseDao(dbContext);
+            dao = DatabaseDao.getInstance(DBContext.getInstance());
         } catch (Exception ex) {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -61,7 +60,10 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userName", userName);
             response.sendRedirect("./room");
         } else {
-            response.sendRedirect("./");
+            request.setAttribute("status", "FAILED");
+            request.setAttribute("message", "Incorrect user name or password!");
+            RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
+            view.forward(request, response);
         }
     }
 }
