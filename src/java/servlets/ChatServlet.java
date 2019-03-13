@@ -95,57 +95,58 @@ public class ChatServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            HttpSession session = request.getSession();
-            byte[] image = uploadFile(request);
-    
-            DBContext dbContext = new DBContext();
-            DatabaseDao dao = null;       
-            try {
-                dao = new DatabaseDao(dbContext);
-            } catch (Exception ex) {
-                Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            UserManagement userManagement = new UserManagement(dao);
-            User original = userManagement.getUserByName(session.getAttribute("userName").toString());
-            User temp = new User(original.getName(), original.getNickName(), original.getPassword(), image);
-            userManagement.editUserByName(temp);
+        HttpSession session = request.getSession();
+        InputStream image = getUploadAvatar(request);
+
+        DBContext dbContext = new DBContext();
+        DatabaseDao dao = null;
+        try {
+            dao = new DatabaseDao(dbContext);
+        } catch (Exception ex) {
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        UserManagement userManagement = new UserManagement(dao);
+        User original = userManagement.getUserByName(session.getAttribute("userName").toString());
+        User temp = new User(original.getName(), original.getNickname(), original.getPassword(), image);
+        userManagement.editUserByName(temp);
+
+        response.sendRedirect("./");
     }
-    
 
     /**
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description
      */
-    
-    
-    
-    private byte[] uploadFile(HttpServletRequest request) throws IOException, ServletException {
-        String fileName = "";
-        ArrayList<Byte> tempImage = new ArrayList<>();
-        try {
-            Part filePart = request.getPart("avatar");
-            fileName = (String) getFileName(filePart);
-            InputStream fileContent = filePart.getInputStream();
-
-            int data = fileContent.read();
-            while (data != -1) {
-                data = fileContent.read();
-                tempImage.add((byte) data);
-            }
-            fileContent.close();
-
-        } catch (Exception e) {
-            fileName = "";
-            System.out.println(e);
-        }
-        
-        byte [] temp = new byte[tempImage.size()];
-        for (int i = 0; i < tempImage.size(); i++) {
-            temp[i] = tempImage.get(i);
-        }
-        
-        return temp;
+    private InputStream getUploadAvatar(HttpServletRequest request) throws IOException, ServletException {
+////        String fileName = "";
+//        ArrayList<Byte> tempImage = new ArrayList<>();
+//        try {
+//            Part filePart = request.getPart("avatar");
+////            fileName = (String) getFileName(filePart);
+//            InputStream fileContent = filePart.getInputStream();
+//
+//            int data = fileContent.read();
+//            while (data != -1) {
+//                data = fileContent.read();
+//                tempImage.add((byte) data);
+//            }
+//            fileContent.close();
+//
+//        } catch (Exception e) {
+////            fileName = "";
+//            System.out.println(e);
+//        }
+//        
+//        byte [] temp = new byte[tempImage.size()];
+//        for (int i = 0; i < tempImage.size(); i++) {
+//            temp[i] = tempImage.get(i);
+//        }
+//        
+//        return temp;
+        Part filePart = request.getPart("avatar");
+//            fileName = (String) getFileName(filePart);
+        return filePart.getInputStream();
     }
 
     private String getFileName(Part part) {
@@ -159,7 +160,7 @@ public class ChatServlet extends HttpServlet {
 
         return null;
     }
-    
+
     @Override
     public String getServletInfo() {
         return "Short description";

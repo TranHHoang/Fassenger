@@ -7,7 +7,7 @@ package socket;
 
 import app.MessageManagement;
 import app.UserManagement;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import java.util.Base64;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
@@ -83,20 +83,11 @@ public class ChatSocket {
             datePattern = "dd/MM/yy 'at' " + datePattern;
         }
 
-        byte[] ava = new byte[0];
-
-        if (!isSender) {
-            DBContext context = new DBContext();
-            UserManagement um = new UserManagement(new DatabaseDao(context));
-            ava = um.getUserByName(msg.getName()).getImage();
-        }
-
         return Json.createObjectBuilder()
                 .add("isSender", isSender)
                 .add("user", msg.getName())
-                .add("avatar", Base64.encode(ava))
                 .add("date", new SimpleDateFormat(datePattern).format(msg.getDateCreated()))
-                .add("image", Base64.encode(msg.getImageContent() == null ? new byte[0] : msg.getImageContent()))
+                .add("image", Base64.getEncoder().encodeToString(msg.getImageContent() == null ? new byte[0] : msg.getImageContent()))
                 .add("text", msg.getTextContent())
                 .build();
     }

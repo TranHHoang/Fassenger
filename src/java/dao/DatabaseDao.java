@@ -39,7 +39,7 @@ public class DatabaseDao {
                         rs.getString(UserTable.USER_NAME),
                         rs.getNString(UserTable.NICK_NAME),
                         rs.getString(UserTable.PASSWORD),
-                        rs.getBytes(UserTable.AVATAR)
+                        rs.getBinaryStream(UserTable.AVATAR)
                 ));
             }
         } catch (Exception e) {
@@ -60,9 +60,9 @@ public class DatabaseDao {
 
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setNString(1, user.getNickName());
+            statement.setNString(1, user.getNickname());
             statement.setString(2, user.getPassword());
-            statement.setBytes(3, user.getImage());
+            statement.setBinaryStream(3, user.getAvatar());
             statement.setString(4, user.getName());
 
             statement.executeUpdate();
@@ -76,9 +76,9 @@ public class DatabaseDao {
             String sql = String.format("insert into %s values (NEWID(), ?, ?, ?, ?) ", DatabaseTable.USER_TABLE);
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getName());
-            statement.setNString(2, user.getNickName());
+            statement.setNString(2, user.getNickname());
             statement.setString(3, user.getPassword());
-            statement.setBytes(4, user.getImage());
+            statement.setBinaryStream(4, user.getAvatar());
 
             System.out.println(statement.toString());
 
@@ -102,7 +102,7 @@ public class DatabaseDao {
                     rs.getString(UserTable.USER_NAME),
                     rs.getString(UserTable.NICK_NAME),
                     rs.getString(UserTable.PASSWORD),
-                    rs.getBytes(UserTable.AVATAR));
+                    rs.getBinaryStream(UserTable.AVATAR));
 
         } catch (Exception e) {
             System.out.println(e);

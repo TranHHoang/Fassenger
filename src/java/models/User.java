@@ -5,6 +5,8 @@
  */
 package models;
 
+import java.io.InputStream;
+
 /**
  *
  * @author LEGION
@@ -14,7 +16,7 @@ public class User {
     private String name;
     private String nickname;
     private String password;
-    private byte[] avatar;
+    private InputStream avatar;
 
     public User() {
     }
@@ -23,7 +25,7 @@ public class User {
         this.name = name;
     }
     
-    public User(String name, String nickName, String password, byte[] image) {
+    public User(String name, String nickName, String password, InputStream image) {
         this.name = name;
         this.nickname = nickName;
         this.password = password;
@@ -38,14 +40,6 @@ public class User {
         this.name = name;
     }
 
-    public String getNickName() {
-        return nickname;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickname = nickName;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -54,21 +48,19 @@ public class User {
         this.password = password;
     }
 
-    public byte[] getImage() {
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public InputStream getAvatar() {
         return avatar;
     }
 
-    public void setImage(byte[] image) {
-        this.avatar = image;
+    public void setAvatar(InputStream avatar) {
+        this.avatar = avatar;
     }
-
-    @Override
-    public String toString() {
-        String s = "";
-        for (byte b : avatar) {
-            s += b + ",";
-        }
-        return s;
-    }
-
 }

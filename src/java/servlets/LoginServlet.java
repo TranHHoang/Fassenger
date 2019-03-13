@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet {
         if (user != null && user.getPassword().equals(password)) {
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(1 * 60);
-            session.setAttribute("nickName", user.getNickName());
+            session.setAttribute("nickName", user.getNickname());
             session.setAttribute("userName", userName);
             response.sendRedirect("./room");
         } else {
