@@ -25,9 +25,10 @@ public class TestImage extends javax.swing.JFrame {
     public TestImage() {
         initComponents();
 
-        DBContext context = new DBContext();
         try {
-            UserManagement um = new UserManagement(new DatabaseDao(context));
+            DatabaseDao dao = DatabaseDao.getInstance(DBContext.getInstance());
+
+            UserManagement um = new UserManagement(dao);
 
             InputStream ava = um.getUserByName("admin").getAvatar();
 
@@ -37,7 +38,7 @@ public class TestImage extends javax.swing.JFrame {
             while ((read = ava.read(data, 0, data.length)) != -1) {
                 buffer.write(data, 0, read);
             }
-            
+
             buffer.flush();
             jLabel1.setIcon(new ImageIcon(buffer.toByteArray()));
 

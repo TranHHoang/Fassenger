@@ -54,8 +54,7 @@ public class ChatSocket {
             // Load previous history to chat
             try {
                 // Put message to DAO
-                DBContext context = new DBContext();
-                MessageManagement mm = new MessageManagement(new DatabaseDao(context));
+                MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
 
                 List<Message> messages = mm.getMessagesBeforeDate(100, new Date());
 
@@ -102,8 +101,7 @@ public class ChatSocket {
 
         try {
             // Put message to DAO
-            DBContext context = new DBContext();
-            MessageManagement mm = new MessageManagement(new DatabaseDao(context));
+            MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
 
             mm.addMessage(messageObj);
 

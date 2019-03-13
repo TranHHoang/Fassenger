@@ -8,6 +8,8 @@ package app;
 import dao.DatabaseDao;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import models.Message;
 
 /**
@@ -16,14 +18,23 @@ import models.Message;
  */
 public class MessageManagement {
 
-    DatabaseDao dao;
+    private final DatabaseDao dao;
+    private static MessageManagement instance;
 
-    public MessageManagement(DatabaseDao dao) {
+    private MessageManagement(DatabaseDao dao) {
         this.dao = dao;
+    }
+
+    public static MessageManagement getInstance(DatabaseDao dao) {
+        if (instance == null) {
+            instance = new MessageManagement(dao);
+        }
+        return instance;
     }
 
     public void addMessage(Message msg) {
         dao.addMessage(msg);
+
     }
 
     public ArrayList<Message> getMessagesBeforeDate(int numOfMess, Date lastDate) {

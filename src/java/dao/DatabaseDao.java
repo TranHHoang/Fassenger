@@ -19,10 +19,19 @@ import models.Message;
  */
 public class DatabaseDao {
 
-    private Connection connection;
+    private final Connection connection;
 
-    public DatabaseDao(DBContext context) throws Exception {
+    private static DatabaseDao instance;
+
+    private DatabaseDao(DBContext context) throws Exception {
         connection = context.getConnection();
+    }
+
+    public static DatabaseDao getInstance(DBContext context) throws Exception {
+        if (instance == null) {
+            instance = new DatabaseDao(context);
+        }
+        return instance;
     }
 
     public List<User> getAllUser() {
@@ -114,14 +123,14 @@ public class DatabaseDao {
     public void addMessage(Message msg) {
         try {
             String sql = "insert into " + DatabaseTable.MESSAGE_TABLE + " values (NEWID(), ?, ?, ?, ?)";
-            
+
             PreparedStatement pst = connection.prepareStatement(sql);
-            
+
             pst.setString(MessageTable.ColumnOrder.USER_NAME.ordinal(), msg.getName());
             pst.setTimestamp(MessageTable.ColumnOrder.DATE_CREATED.ordinal(), new Timestamp(msg.getDateCreated().getTime()));
             pst.setBytes(MessageTable.ColumnOrder.IMAGE_CONTENT.ordinal(), msg.getImageContent());
             pst.setString(MessageTable.ColumnOrder.TEXT_CONTENT.ordinal(), msg.getTextContent());
-            
+
             pst.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,12 +141,12 @@ public class DatabaseDao {
         ArrayList<Message> result = new ArrayList<>();
         try {
             String sql = "select top (?) * from " + DatabaseTable.MESSAGE_TABLE
-                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + " < ?";
+                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + " < ? order by " + DatabaseTable.MessageTable.DATE_CREATED;
 
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1, numberOfMess);
             pst.setTimestamp(2, new Timestamp(lastDate.getTime()));
-            
+
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 result.add(new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),

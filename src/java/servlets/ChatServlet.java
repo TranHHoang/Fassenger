@@ -69,6 +69,8 @@ public class ChatServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+
         HttpSession session = request.getSession();
         try {
             String userName = session.getAttribute("userName").toString();
@@ -98,10 +100,10 @@ public class ChatServlet extends HttpServlet {
         HttpSession session = request.getSession();
         InputStream image = getUploadAvatar(request);
 
-        DBContext dbContext = new DBContext();
         DatabaseDao dao = null;
         try {
-            dao = new DatabaseDao(dbContext);
+            dao = DatabaseDao.getInstance(DBContext.getInstance());
+
         } catch (Exception ex) {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
