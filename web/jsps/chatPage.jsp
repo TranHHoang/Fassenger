@@ -28,7 +28,6 @@
         <title>Chat page</title>
 
         <script src="./scripts/chatroom.js"></script>
-        <script>openConnection()</script>
         <!--fix this change to dynamic-->
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -39,7 +38,7 @@
             integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous"></script>
     </head>
-    <body style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
+    <body onload="openConnection()" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
           url('https://source.unsplash.com/featured/1280x720/?nature,travel,wallpapers,backgrounds,weather,technology') no-repeat fixed center; background-size: cover">
         <!--<input id="textMessage" type="text" />-->
         <!--<input onclick="sendMessage()" value="Send Message" type="button" /> <br/><br/>-->
@@ -64,7 +63,7 @@
                                     <!--<textarea id="textAreaMessage" rows="10" cols="50"></textarea>-->
                                 </div>
                                 <div>
-                                    <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem;" id="userInput" class="form-control col-md-8" placeholder="Write something here...">
+                                    <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem;" id="userInput" class="form-control col-md-9" placeholder="Write something here...">
                                     <button title="Send an image" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="far fa-image"></i></button>
                                     <button title="Send an attachment" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-paperclip"></i></button>
                                     <button id="sendMessageBtn" onclick="sendMessage()" title="Press ENTER to send" class="btn btn-primary" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-arrow-right"></i></button>
