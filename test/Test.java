@@ -1,8 +1,12 @@
 
 import dao.DatabaseDao;
 import dao.context.DBContext;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import models.Message;
+import models.User;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,7 +22,8 @@ public class Test {
     public static void main(String[] args) {
         try {
             DatabaseDao dao = new DatabaseDao(new DBContext());
-            System.out.println("got : " + dao.getUserByName("admin").getId());
+            System.out.println("is admin exist in the online user :"+dao.isUserOnline("admin"));
+            
         } catch (Exception ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }
