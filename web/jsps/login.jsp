@@ -89,6 +89,17 @@
                                 <h5 class="card-title text-center"><i class="far fa-user"></i> Sign In</h5>
                                 <form class="form-signin" action="login" method="POST">
 
+                                    <c:if test="${not empty status}">
+                                        <c:choose>
+                                            <c:when test="${status == 'SUCCESS'}">
+                                                <div class="alert alert-success">${message}</div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="alert alert-danger">${message}</div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:if>
+
                                     <div class="form-label-group">
                                         <input type="text" id="inputUserNameSignIn" name="userName" class="form-control" placeholder="Username" required autofocus>
                                         <label for="inputUserNameSignIn">Username</label>

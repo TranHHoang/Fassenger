@@ -61,7 +61,10 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userName", userName);
             response.sendRedirect("./room");
         } else {
-            response.sendRedirect("./");
+            request.setAttribute("status", "FAILED");
+            request.setAttribute("message", "Incorrect user name or password!");
+            RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
+            view.forward(request, response);
         }
     }
 }

@@ -95,7 +95,9 @@ public class RegisterServlet extends HttpServlet {
         UserManagement userManagement = new UserManagement(dao);
         
         userManagement.addUser(new User(userName, userName, password, null));
-        request.setAttribute("message", "Register successful");
+            
+        request.setAttribute("status", "SUCCESS");
+        request.setAttribute("message", "Register successful! You can now sign in.");
         RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
         view.forward(request, response);
     }
