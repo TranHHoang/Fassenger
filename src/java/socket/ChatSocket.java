@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpSession;
@@ -61,21 +63,23 @@ public class ChatSocket {
             try {
                 // Load message from DAO
                 MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
-                List<Message> messages = mm.getMessagesBeforeDate(100, new Date());
+                List<Message> messages = mm.getMessagesBeforeDate(200, new Date());
 
                 for (Message message : messages) {
                     session.getBasicRemote().sendText(createMessageObj(message, message.getName().equals(userName)).toString());
                 }
-                
+
                 UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
                 List<User> usersOnline = uom.getAllOnlineUser();
-                
+
                 System.out.println(usersOnline.size());
 
                 // Broadcast user online to other users
                 for (Session userSession : userList) {
+                    userSession.getBasicRemote().sendText(createClearObj().toString());
+
                     for (User onlineUser : usersOnline) {
-                        userSession.getBasicRemote().sendText(createStatusObj(onlineUser, "online").toString());
+                        userSession.getBasicRemote().sendText(createStatusObj(onlineUser).toString());
                     }
                 }
 
@@ -86,11 +90,16 @@ public class ChatSocket {
         }
     }
 
-    public static JsonObject createStatusObj(User user, String status) {
+    public static JsonObject createClearObj() {
+        return Json.createObjectBuilder()
+                .add("type", "clear")
+                .build();
+    }
+
+    public static JsonObject createStatusObj(User user) {
         return Json.createObjectBuilder()
                 .add("type", TYPE_STATUS)
                 .add("user", user.getName())
-                .add("status", status)
                 .build();
     }
 
@@ -141,11 +150,30 @@ public class ChatSocket {
 
     @OnClose
     public void onClose(Session session) throws IOException {
+        String userName = session.getUserProperties().get("userName").toString();
+
+        UserOnlineManagement uom;
+        try {
+            uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
+
+            if (!uom.isUserOnline(userName)) {
+                // Broadcast user online to other users
+                for (Session userSession : userList) {
+                    userSession.getBasicRemote().sendText(createClearObj().toString());
+                    for (User onlineUser : uom.getAllOnlineUser()) {
+                        userSession.getBasicRemote().sendText(createStatusObj(onlineUser).toString());
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ChatSocket.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         userList.remove(session);
 
-        for (Session s : userList) {
-            s.getBasicRemote().sendText(session.getUserProperties().get("userName") + " offline");
-        }
+//        for (Session s : userList) {
+//            s.getBasicRemote().sendText(session.getUserProperties().get("userName") + " offline");
+//        }
     }
 
     @OnError

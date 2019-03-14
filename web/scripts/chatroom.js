@@ -31,7 +31,7 @@ function openConnection() {
                         if (lastUser === responseObj.user) {
                             $("#chatBox").last().children().last().children(".small-ava").css("visibility", "hidden");
                         }
-                        
+
                         console.log(responseObj.image);
 
                         chatBubble.innerHTML = responseObj.text;
@@ -67,6 +67,7 @@ function openConnection() {
                 case "status":
                 {
                     let userContainer = document.createElement('div');
+                    userContainer.classList.add('user-container');
                     let avatar = document.createElement('span');
                     let avaImg = document.createElement('img');
 
@@ -88,6 +89,14 @@ function openConnection() {
 
                     userOnlineBox.appendChild(userContainer);
                 }
+                break;
+                case "clear":
+                {
+                    while (userOnlineBox.firstChild) {
+                        userOnlineBox.removeChild(userOnlineBox.firstChild);
+                    }
+                }
+                break;
             }
         };
 
