@@ -126,7 +126,7 @@ public class DatabaseDao {
 
             pst.setString(MessageTable.ColumnOrder.USER_NAME.ordinal(), msg.getName());
             pst.setTimestamp(MessageTable.ColumnOrder.DATE_CREATED.ordinal(), new Timestamp(msg.getDateCreated().getTime()));
-            pst.setBytes(MessageTable.ColumnOrder.IMAGE_CONTENT.ordinal(), msg.getImageContent());
+            pst.setBinaryStream(MessageTable.ColumnOrder.IMAGE_CONTENT.ordinal(), msg.getImageContent());
             pst.setString(MessageTable.ColumnOrder.TEXT_CONTENT.ordinal(), msg.getTextContent());
 
             pst.executeUpdate();
@@ -149,7 +149,7 @@ public class DatabaseDao {
             while (rs.next()) {
                 result.add(new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
                         new java.util.Date(rs.getTimestamp(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
-                        rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT),
+                        rs.getBinaryStream(DatabaseTable.MessageTable.IMAGE_CONTENT),
                         rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT)));
             }
         } catch (Exception e) {

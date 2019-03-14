@@ -29,7 +29,9 @@
 
         <script src="./scripts/chatroom.js"></script>
         <!--fix this change to dynamic-->
+        <!--<link rel="stylesheet" href="./styles/bootstrap/css/bootstrap.min.css">-->
 
+        
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="./styles/style.css">
@@ -46,12 +48,12 @@
         <div class="container" style="max-width: 100%">
             <div class="row">
                 <div class="col-12">
-                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.75); min-height: 93vh; margin-bottom: 1.5rem!important; margin-top: 1.5rem!important">
+                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.9); min-height: 93vh; margin-bottom: 1.5rem!important; margin-top: 1.5rem!important">
 
                         <div class="card-body row">
                             <div class="col" style="display: flex; flex-flow: column;">
-                                <h5 class="card-title text-center">Online Users</h5>
-                                <div id="userOnlineBox" class="col-md-11" style="background: white; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem">
+                                <h5 class="card-title text-center h4"><b style="margin-right: .5rem">Online</b><i class="fas fa-signal"></i></h5>
+                                <div id="userOnlineBox" class="col-md-11 scrollbar scrollbar-near-moon" style="overflow-y: scroll; overflow-x: hidden; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem">
 
                                     <!--<textarea id="textAreaMessage" rows="10" cols="50"></textarea>-->
                                 </div>
@@ -71,7 +73,7 @@
                             </div>
 
                             <div class="col" style="text-align: center">
-                                <h4 class="card-title text-center">Hello there, </h4>
+                                <h4 class="card-title text-center"><b>Hello there,</b></h4>
                                 <div style="text-align: center">
                                     <img src="./ava/${userName}" style="border-radius: 50%; display: inline-block; width: 256px; height: 256px; margin-bottom: 1rem">
                                 </div>
@@ -84,7 +86,8 @@
                                     <input id="input-btn" name="avatar" type="file">
                                     <input id="clickHere" type="submit">
                                 </form>
-                                <button onclick="clickBtn()" title="Change avatar" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-upload"></i></button>
+                                <button onclick="clickBtn()" title="Change nickname" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-signature"></i></button>
+                                <button onclick="clickBtn()" title="Change avatar" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-user-circle"></i></button>
                                 <a href="logout"><button id="logoutBtn" title="Logout" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-sign-out-alt"></i></button><a/>
                             </div>
                         </div>

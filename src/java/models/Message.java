@@ -5,6 +5,7 @@
  */
 package models;
 
+import java.io.InputStream;
 import java.util.Date;
 
 /**
@@ -14,13 +15,13 @@ import java.util.Date;
 public class Message {
     private String name;
     private Date dateCreated;
-    private byte[] imageContent;
+    private InputStream imageContent;
     private String textContent;
 
     public Message() {
     }
 
-    public Message(String name, Date dateCreated, byte[] imageContent, String textContent) {
+    public Message(String name, Date dateCreated, InputStream imageContent, String textContent) {
         this.name = name;
         this.dateCreated = dateCreated;
         this.imageContent = imageContent;
@@ -43,11 +44,11 @@ public class Message {
         this.dateCreated = dateCreated;
     }
 
-    public byte[] getImageContent() {
+    public InputStream getImageContent() {
         return imageContent;
     }
 
-    public void setImageContent(byte[] imageContent) {
+    public void setImageContent(InputStream imageContent) {
         this.imageContent = imageContent;
     }
 

@@ -69,11 +69,13 @@ public class ChatSocket {
                 
                 UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
                 List<User> usersOnline = uom.getAllOnlineUser();
+                
+                System.out.println(usersOnline.size());
 
                 // Broadcast user online to other users
                 for (Session userSession : userList) {
                     for (User onlineUser : usersOnline) {
-                        userSession.getBasicRemote().sendText(createStatusObj(onlineUser.getName(), "online").toString());
+                        userSession.getBasicRemote().sendText(createStatusObj(onlineUser, "online").toString());
                     }
                 }
 
@@ -84,10 +86,10 @@ public class ChatSocket {
         }
     }
 
-    public static JsonObject createStatusObj(String user, String status) {
+    public static JsonObject createStatusObj(User user, String status) {
         return Json.createObjectBuilder()
                 .add("type", TYPE_STATUS)
-                .add("user", user)
+                .add("user", user.getName())
                 .add("status", status)
                 .build();
     }
@@ -110,7 +112,7 @@ public class ChatSocket {
                 .add("isSender", isSender)
                 .add("user", msg.getName())
                 .add("date", new SimpleDateFormat(datePattern).format(msg.getDateCreated()))
-                .add("image", Base64.getEncoder().encodeToString(msg.getImageContent() == null ? new byte[0] : msg.getImageContent()))
+                .add("image", msg.getImageContent() != null ? msg.getName() + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(msg.getDateCreated()) : "")
                 .add("text", msg.getTextContent())
                 .build();
     }
