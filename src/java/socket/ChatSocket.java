@@ -11,6 +11,7 @@ import java.util.Base64;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -68,6 +69,10 @@ public class ChatSocket {
                 ex.printStackTrace();
             }
         }
+    }
+    
+    private JsonObject createUserOnlineStatus(String userName, boolean isOnline) {
+        return Json.createObjectBuilder().add("userName", userName).add("isOnline", isOnline).build();
     }
 
     private JsonObject createMessageObj(Message msg, boolean isSender) throws Exception {
