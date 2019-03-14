@@ -5,8 +5,13 @@
  */
 package servlets;
 
+import app.UserOnlineManagement;
+import dao.DatabaseDao;
+import dao.context.DBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +36,15 @@ public class LogoutServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
+        DatabaseDao dao = null;
+
+        try {
+            dao = DatabaseDao.getInstance(DBContext.getInstance());
+        } catch (Exception ex) {
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        UserOnlineManagement userOnline = new UserOnlineManagement(dao);
+        userOnline.deleteOnlineUser(session.getAttribute("userName").toString());
         session.invalidate();
         response.sendRedirect("./");
     }

@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -6,6 +6,7 @@
 package servlets;
 
 import app.UserManagement;
+import app.UserOnlineManagement;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
@@ -46,6 +47,8 @@ public class LoginServlet extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+        UserOnlineManagement userOnline = new UserOnlineManagement(dao);
+        
         UserManagement userManagement = new UserManagement(dao);
 
         String userName = request.getParameter("userName");
@@ -58,6 +61,7 @@ public class LoginServlet extends HttpServlet {
             session.setMaxInactiveInterval(1 * 60);
             session.setAttribute("nickName", user.getNickname());
             session.setAttribute("userName", userName);
+            userOnline.addOnlineUser(userName);
             response.sendRedirect("./room");
         } else {
             request.setAttribute("status", "FAILED");
