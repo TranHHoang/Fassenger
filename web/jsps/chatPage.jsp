@@ -34,8 +34,8 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="./styles/style.css">
         <script
-            src="http://code.jquery.com/jquery-3.3.1.js"
-            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
         crossorigin="anonymous"></script>
     </head>
     <body onload="openConnection()" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
@@ -51,7 +51,7 @@
                         <div class="card-body row">
                             <div class="col" style="display: flex; flex-flow: column;">
                                 <h5 class="card-title text-center">Online Users</h5>
-                                <div class="col-md-11" style="background: white; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem">
+                                <div id="userOnlineBox" class="col-md-11" style="background: white; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem">
 
                                     <!--<textarea id="textAreaMessage" rows="10" cols="50"></textarea>-->
                                 </div>

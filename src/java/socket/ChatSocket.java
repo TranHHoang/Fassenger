@@ -7,6 +7,7 @@ package socket;
 
 import app.MessageManagement;
 import app.UserManagement;
+import app.UserOnlineManagement;
 import java.util.Base64;
 import dao.DatabaseDao;
 import dao.context.DBContext;
@@ -30,6 +31,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.server.ServerEndpoint;
 import javax.websocket.Session;
 import models.Message;
+import models.User;
 
 /**
  *
@@ -38,8 +40,11 @@ import models.Message;
 @ServerEndpoint(value = "/chatroom", configurator = GetHttpSessionConfigurator.class)
 public class ChatSocket {
 
+    public static final String TYPE_MESSAGE = "message";
+    public static final String TYPE_TYPING = "typing";
+    public static final String TYPE_STATUS = "status";
+
     private static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
-    private String lastUserName = null;
 
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) {
@@ -54,25 +59,37 @@ public class ChatSocket {
 
             // Load previous history to chat
             try {
-                // Put message to DAO
+                // Load message from DAO
                 MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
-
                 List<Message> messages = mm.getMessagesBeforeDate(100, new Date());
 
                 for (Message message : messages) {
                     session.getBasicRemote().sendText(createMessageObj(message, message.getName().equals(userName)).toString());
                 }
+                
+                UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
+                List<User> usersOnline = uom.getAllOnlineUser();
 
-                System.out.println(messages.size());
+                // Broadcast user online to other users
+                for (Session userSession : userList) {
+                    for (User onlineUser : usersOnline) {
+                        userSession.getBasicRemote().sendText(createStatusObj(onlineUser.getName(), "online").toString());
+                    }
+                }
+
             } catch (Exception ex) {
                 // Error exception
                 ex.printStackTrace();
             }
         }
     }
-    
-    private JsonObject createUserOnlineStatus(String userName, boolean isOnline) {
-        return Json.createObjectBuilder().add("userName", userName).add("isOnline", isOnline).build();
+
+    public static JsonObject createStatusObj(String user, String status) {
+        return Json.createObjectBuilder()
+                .add("type", TYPE_STATUS)
+                .add("user", user)
+                .add("status", status)
+                .build();
     }
 
     private JsonObject createMessageObj(Message msg, boolean isSender) throws Exception {
@@ -89,6 +106,7 @@ public class ChatSocket {
         }
 
         return Json.createObjectBuilder()
+                .add("type", TYPE_MESSAGE)
                 .add("isSender", isSender)
                 .add("user", msg.getName())
                 .add("date", new SimpleDateFormat(datePattern).format(msg.getDateCreated()))
