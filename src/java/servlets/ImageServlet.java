@@ -5,31 +5,30 @@
  */
 package servlets;
 
+import app.MessageManagement;
 import app.UserManagement;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import models.Message;
 import models.User;
 
 /**
  *
  * @author Kiruu
  */
-public class ChatServlet extends HttpServlet {
+public class ImageServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,10 +47,10 @@ public class ChatServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeServlet</title>");
+            out.println("<title>Servlet ImageServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ImageServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,21 +68,7 @@ public class ChatServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
-
-        HttpSession session = request.getSession();
-        try {
-            String userName = session.getAttribute("userName").toString();
-            if (userName != null) {
-                RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
-                view.forward(request, response);
-            }
-        } catch (Exception e) {
-            //userName not found
-            System.out.println(e);
-            response.sendRedirect("./");
-
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -98,7 +83,7 @@ public class ChatServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        InputStream image = getUploadAvatar(request);
+        InputStream image = getUploadImage(request);
 
         DatabaseDao dao = null;
         try {
@@ -107,62 +92,23 @@ public class ChatServlet extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        UserManagement userManagement = new UserManagement(dao);
-        User original = userManagement.getUserByName(session.getAttribute("userName").toString());
-        User temp = new User(original.getName(), original.getNickname(), original.getPassword(), image);
-        userManagement.editUserByName(temp);
+        MessageManagement messageManagement = MessageManagement.getInstance(dao);
+        messageManagement.addMessage(new Message(session.getAttribute("userName").toString(), new Date(), image, null));
 
         response.sendRedirect("./");
     }
 
+    
+    private InputStream getUploadImage(HttpServletRequest request) throws IOException, ServletException {
+        Part filePart = request.getPart("uploadImage");
+        return filePart.getInputStream();
+    }
+    
     /**
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description
      */
-    private InputStream getUploadAvatar(HttpServletRequest request) throws IOException, ServletException {
-//        String fileName = "";
-//        ArrayList<Byte> tempImage = new ArrayList<>();
-//        try {
-//            Part filePart = request.getPart("avatar");
-//            fileName = (String) getFileName(filePart);
-//            InputStream fileContent = filePart.getInputStream();
-//
-//            int data = fileContent.read();
-//            while (data != -1) {
-//                data = fileContent.read();
-//                tempImage.add((byte) data);
-//            }
-//            fileContent.close();
-//
-//        } catch (Exception e) {
-//            fileName = "";
-//            System.out.println(e);
-//        }
-//        
-//        byte [] temp = new byte[tempImage.size()];
-//        for (int i = 0; i < tempImage.size(); i++) {
-//            temp[i] = tempImage.get(i);
-//        }
-//        
-//        return temp;
-        Part filePart = request.getPart("avatar");
-//            fileName = (String) getFileName(filePart);
-        return filePart.getInputStream();
-    }
-
-    private String getFileName(Part part) {
-        final String partHeader = part.getHeader("content-disposition");
-        System.out.println("*****partHeader :" + partHeader);
-        for (String content : part.getHeader("content-disposition").split(";")) {
-            if (content.trim().startsWith("filename")) {
-                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public String getServletInfo() {
         return "Short description";

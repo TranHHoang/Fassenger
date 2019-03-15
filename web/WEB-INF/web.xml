@@ -25,6 +25,15 @@
         <servlet-name>AvaServlet</servlet-name>
         <servlet-class>servlets.AvaServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ImageServlet</servlet-name>
+        <servlet-class>servlets.ImageServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>52428800</max-request-size>
+            <file-size-threshold>104857600</file-size-threshold>
+        </multipart-config>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -44,6 +53,10 @@
     <servlet-mapping>
         <servlet-name>AvaServlet</servlet-name>
         <url-pattern>/ava/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImageServlet</servlet-name>
+        <url-pattern>/image</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>11520</session-timeout>

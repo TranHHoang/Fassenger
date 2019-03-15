@@ -121,7 +121,7 @@ public class ChatSocket {
                 .add("isSender", isSender)
                 .add("user", msg.getName())
                 .add("date", new SimpleDateFormat(datePattern).format(msg.getDateCreated()))
-                .add("image", msg.getImageContent() != null ? msg.getName() + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(msg.getDateCreated()) : "")
+                .add("image", msg.getTextContent())
                 .add("text", msg.getTextContent())
                 .build();
     }

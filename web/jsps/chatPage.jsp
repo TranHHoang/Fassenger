@@ -66,9 +66,15 @@
                                 </div>
                                 <div>
                                     <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem;" id="userInput" class="form-control col-md-9" placeholder="Write something here...">
-                                    <button title="Send an image" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="far fa-image"></i></button>
+                                    <button onClick="clickBtn('sendImage')" title="Send an image" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="far fa-image"></i></button>
                                     <button title="Send an attachment" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-paperclip"></i></button>
                                     <button id="sendMessageBtn" onclick="sendMessage()" title="Press ENTER to send" class="btn btn-primary" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-arrow-right"></i></button>
+                                
+                                    <form action="image" method="POST" enctype="multipart/form-data" style="display: none">
+                                        <input id="sendImage" name="uploadImage" type="file"/>
+                                        <input type='submit' id='sendImageBtn'>
+                                    </form>
+                                    
                                 </div>
                             </div>
 
@@ -86,8 +92,8 @@
                                     <input id="input-btn" name="avatar" type="file">
                                     <input id="clickHere" type="submit">
                                 </form>
-                                <button onclick="clickBtn()" title="Change nickname" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-signature"></i></button>
-                                <button onclick="clickBtn()" title="Change avatar" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-user-circle"></i></button>
+                                <button title="Change nickname" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-signature"></i></button>
+                                <button onclick="clickBtn('input-btn')" title="Change avatar" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-user-circle"></i></button>
                                 <a href="logout"><button id="logoutBtn" title="Logout" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-sign-out-alt"></i></button><a/>
                             </div>
                         </div>
@@ -97,12 +103,16 @@
         </div>
 
         <script>
-            function clickBtn() {
-                document.getElementById("input-btn").click()
+            function clickBtn(button) {
+                document.getElementById(button).click()
             }
 
             $("#input-btn").change(function (e) {
-            ${"clickHere"}.click()
+                ${"clickHere"}.click()
+            });
+            
+            $("#sendImage").change(function (e) {
+                ${"sendImageBtn"}.click()
             });
 
         </script>

@@ -3,34 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlets;
 
-import app.UserManagement;
-import app.UserOnlineManagement;
-import dao.DatabaseDao;
-import dao.context.DBContext;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.User;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author Kiruu
  */
-public class AvaServlet extends HttpServlet {
+public class NewServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,13 +37,54 @@ public class AvaServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AvaServlet</title>");
+            out.println("<title>Servlet NewServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AvaServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
+    }
+    
+    
+    private String getFileName(Part part) {
+        final String partHeader = part.getHeader("content-disposition");
+        System.out.println("*****partHeader :" + partHeader);
+        for (String content : part.getHeader("content-disposition").split(";")) {
+            if (content.trim().startsWith("filename")) {
+                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+
+        return null;
+    }
+    
+     private byte[] getUploadAvatar(HttpServletRequest request) throws IOException, ServletException {
+        String fileName = "";
+        ArrayList<Byte> tempImage = new ArrayList<>();
+        try {
+            Part filePart = request.getPart("avatar");
+            fileName = (String) getFileName(filePart);
+            InputStream fileContent = filePart.getInputStream();
+
+            int data = fileContent.read();
+            while (data != -1) {
+                data = fileContent.read();
+                tempImage.add((byte) data);
+            }
+            fileContent.close();
+
+        } catch (Exception e) {
+            fileName = "";
+            System.out.println(e);
+        }
+        
+        byte [] temp = new byte[tempImage.size()];
+        for (int i = 0; i < tempImage.size(); i++) {
+            temp[i] = tempImage.get(i);
+        }
+        
+        return temp;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -70,39 +99,7 @@ public class AvaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String userName = request.getRequestURL().toString().split("/")[5];
-        
-        DatabaseDao dao = null;
-
-        try {
-            dao = DatabaseDao.getInstance(DBContext.getInstance());
-        } catch (Exception ex) {
-            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        UserManagement userManagement = new UserManagement(dao);
-        
-        InputStream is = null;
-        User user = userManagement.getUserByName(userName);
-        
-        
-        if (user.getAvatar() == null) {
-            is = new BufferedInputStream(new FileInputStream(getServletContext().getRealPath("/defaultImage/ava.jpg")));
-        
-        } else {
-            is = user.getAvatar();
-        }
-
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int read;
-        byte[] data = new byte[1024];
-        while ((read = is.read(data, 0, data.length)) != -1) {
-            buffer.write(data, 0, read);
-        }
-
-        buffer.flush();
-        
-        response.getOutputStream().write(buffer.toByteArray());
+        processRequest(request, response);
     }
 
     /**
@@ -116,6 +113,7 @@ public class AvaServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        getUploadAvatar(request);
         processRequest(request, response);
     }
 
