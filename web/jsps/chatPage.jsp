@@ -112,7 +112,9 @@
             });
             
             $("#sendImage").change(function (e) {
+                
                 ${"sendImageBtn"}.click()
+                    
             });
 
         </script>

@@ -74,7 +74,8 @@ public class ImageServlet extends HttpServlet {
         String[] list = context.split("_");
         String userName = list[0];
         String date = String.format("%s-%s-%s-%s-%s-%s-%s", list[1], list[2], list[3], list[4], list[5], list[6], list[7]);
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss-SSS");
+        System.out.println(date);   
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss-SSS");
         Date dates = null;
         try {
             dates = format.parse(date);
@@ -91,14 +92,16 @@ public class ImageServlet extends HttpServlet {
         }
         MessageManagement messageManagement = MessageManagement.getInstance(dao);
         Message image = messageManagement.getMessagesByDate(dates);
-        System.out.println(messageManagement.getMessagesBeforeDate(10, dates));
-        
+//        System.out.println(image);
+//        http://localhost:8080/Fassenger/image/1_18_3_2019_10_48_29_100
+//        http://localhost:8080/Fassenger/image/1_19_03_2019_09_46_21_433
         
         InputStream is = image.getImageContent();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int read;
         byte[] data = new byte[1024];
         while ((read = is.read(data, 0, data.length)) != -1) {
+            System.out.println("hello");
             buffer.write(data, 0, read);
         }
 
@@ -129,7 +132,11 @@ public class ImageServlet extends HttpServlet {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         MessageManagement messageManagement = MessageManagement.getInstance(dao);
-        messageManagement.addMessage(new Message(session.getAttribute("userName").toString(), new Date(), image, null));
+        Date date = new Date();
+        
+        SimpleDateFormat format = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss_SSS");
+        
+        messageManagement.addMessage(new Message(session.getAttribute("userName").toString(), date, image, session.getAttribute("userName") + "_" + format.format(date)));
 
         response.sendRedirect("./");
     }

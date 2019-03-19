@@ -21,6 +21,7 @@ function openConnection() {
                         let date = document.createElement('span');
                         let avatar = document.createElement('span');
                         let avaImg = document.createElement('img');
+                        let imgChat = document.createElement('img');
 
                         avaImg.title = responseObj.user;
                         avaImg.src = "./ava/" + responseObj.user;
@@ -38,6 +39,7 @@ function openConnection() {
                         date.innerHTML = responseObj.date;
                         date.classList.add('date');
                         avatar.classList.add('small-ava');
+                        imgChat.src = "./image/" + responseObj.image;
 
                         avatar.appendChild(avaImg);
 
@@ -46,16 +48,24 @@ function openConnection() {
                             chatBubbleContainer.classList.add('chat-bubble-container-right');
 
                             chatBubbleContainer.appendChild(date);
-                            chatBubbleContainer.appendChild(chatBubble);
+                            if (typeof responseObj.image === 'undefined') {
+                                chatBubbleContainer.appendChild(chatBubble);
+                            } else {
+                                chatBubbleContainer.appendChild(imgChat);
+                            }
                         } else {
                             chatBubble.classList.add('chat-bubble-left');
                             chatBubbleContainer.classList.add('chat-bubble-container-left');
 
                             chatBubbleContainer.appendChild(avatar);
-                            chatBubbleContainer.appendChild(chatBubble);
+                            if (typeof responseObj.image === 'undefined') {
+                                chatBubbleContainer.appendChild(chatBubble);
+                            } else {
+                                chatBubbleContainer.appendChild(imgChat);
+                            }
                             chatBubbleContainer.appendChild(date);
 
-                            if (audioSound == null)
+                            if (audioSound === null)
                                 audioSound = new Audio('./sounds/notify.mp3');
                             audioSound.play();
                         }
@@ -65,38 +75,38 @@ function openConnection() {
                     }
                     break;
                 case "status":
-                {
-                    let userContainer = document.createElement('div');
-                    userContainer.classList.add('user-container');
-                    let avatar = document.createElement('span');
-                    let avaImg = document.createElement('img');
+                    {
+                        let userContainer = document.createElement('div');
+                        userContainer.classList.add('user-container');
+                        let avatar = document.createElement('span');
+                        let avaImg = document.createElement('img');
 
-                    let userNameBubble = document.createElement('span');
-                    userNameBubble.innerHTML = responseObj.user;
-                    userNameBubble.classList.add('user-online-name');
-                    userNameBubble.classList.add('h5');
+                        let userNameBubble = document.createElement('span');
+                        userNameBubble.innerHTML = responseObj.user;
+                        userNameBubble.classList.add('user-online-name');
+                        userNameBubble.classList.add('h5');
 
-                    avaImg.title = responseObj.user;
-                    avaImg.src = "./ava/" + responseObj.user;
-                    avaImg.style.width = "100%";
-                    avaImg.classList.add('small-ava');
+                        avaImg.title = responseObj.user;
+                        avaImg.src = "./ava/" + responseObj.user;
+                        avaImg.style.width = "100%";
+                        avaImg.classList.add('small-ava');
 
-                    avatar.classList.add('small-ava');
-                    avatar.appendChild(avaImg);
+                        avatar.classList.add('small-ava');
+                        avatar.appendChild(avaImg);
 
-                    userContainer.appendChild(avatar);
-                    userContainer.appendChild(userNameBubble);
+                        userContainer.appendChild(avatar);
+                        userContainer.appendChild(userNameBubble);
 
-                    userOnlineBox.appendChild(userContainer);
-                }
-                break;
-                case "clear":
-                {
-                    while (userOnlineBox.firstChild) {
-                        userOnlineBox.removeChild(userOnlineBox.firstChild);
+                        userOnlineBox.appendChild(userContainer);
                     }
-                }
-                break;
+                    break;
+                case "clear":
+                    {
+                        while (userOnlineBox.firstChild) {
+                            userOnlineBox.removeChild(userOnlineBox.firstChild);
+                        }
+                    }
+                    break;
             }
         };
 

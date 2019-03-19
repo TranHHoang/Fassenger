@@ -121,33 +121,7 @@ public class ChatServlet extends HttpServlet {
      * @return a String containing servlet description
      */
     private InputStream getUploadAvatar(HttpServletRequest request) throws IOException, ServletException {
-//        String fileName = "";
-//        ArrayList<Byte> tempImage = new ArrayList<>();
-//        try {
-//            Part filePart = request.getPart("avatar");
-//            fileName = (String) getFileName(filePart);
-//            InputStream fileContent = filePart.getInputStream();
-//
-//            int data = fileContent.read();
-//            while (data != -1) {
-//                data = fileContent.read();
-//                tempImage.add((byte) data);
-//            }
-//            fileContent.close();
-//
-//        } catch (Exception e) {
-//            fileName = "";
-//            System.out.println(e);
-//        }
-//        
-//        byte [] temp = new byte[tempImage.size()];
-//        for (int i = 0; i < tempImage.size(); i++) {
-//            temp[i] = tempImage.get(i);
-//        }
-//        
-//        return temp;
         Part filePart = request.getPart("avatar");
-//            fileName = (String) getFileName(filePart);
         return filePart.getInputStream();
     }
 

@@ -1,12 +1,18 @@
 
+import app.MessageManagement;
 import app.UserManagement;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import models.Message;
+import servlets.ImageServlet;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,14 +34,27 @@ public class TestImage extends javax.swing.JFrame {
         try {
             DatabaseDao dao = DatabaseDao.getInstance(DBContext.getInstance());
 
-            UserManagement um = new UserManagement(dao);
+            MessageManagement um = MessageManagement.getInstance(dao);
 
-            InputStream ava = um.getUserByName("admin").getAvatar();
+            //            InputStream ava = um.getUserByName("admin").getAvatar();
+            String context = "1_18_3_2019_10_48_29_100";
+            String[] list = context.split("_");
+            String userName = list[0];
+            String date = String.format("%s-%s-%s-%s-%s-%s-%s", list[1], list[2], list[3], list[4], list[5], list[6], list[7]);
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss-SSS");
+            Date dates = null;
+            try {
+                dates = format.parse(date);
+            } catch (ParseException ex) {
+                Logger.getLogger(ImageServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Message image = um.getMessagesByDate(dates);
+            InputStream is = image.getImageContent();
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             int read;
             byte[] data = new byte[1024];
-            while ((read = ava.read(data, 0, data.length)) != -1) {
+            while ((read = is.read(data, 0, data.length)) != -1) {
                 buffer.write(data, 0, read);
             }
 

@@ -3,10 +3,12 @@ package dao;
 import dao.DatabaseTable.MessageTable;
 import dao.DatabaseTable.UserTable;
 import dao.context.DBContext;
+import java.io.ByteArrayInputStream;
 import models.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -159,25 +161,28 @@ public class DatabaseDao {
     }
     
     public Message getMessagesByDate(Date lastDate) {
-        ArrayList<Message> result = new ArrayList<>();
+//        ArrayList<Message> result = new ArrayList<>();
         try {
             String sql = "select * from " + DatabaseTable.MESSAGE_TABLE
-                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + " = ?";
+                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + "= ?";
 
             PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setTimestamp(1, new Timestamp(lastDate.getTime()));
+            pst.setString(1, new Timestamp(lastDate.getTime()).toString());
+            System.out.println(new Timestamp(lastDate.getTime()));
 
             ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                result.add(new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
-                        new java.util.Date(rs.getTimestamp(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
-                        rs.getBinaryStream(DatabaseTable.MessageTable.IMAGE_CONTENT),
-                        rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT)));
-            }
-        } catch (Exception e) {
+            rs.next();
+            
+            byte[] image = rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT);
+
+            return new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
+                    new java.util.Date(rs.getTimestamp(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
+                    new ByteArrayInputStream(image),
+                    rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT));
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result.get(0);
+        return null;
     }
 
     /*the following code is for user online table*/

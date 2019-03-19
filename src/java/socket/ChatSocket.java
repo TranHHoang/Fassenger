@@ -64,7 +64,12 @@ public class ChatSocket {
 
                 for (Message message : messages) {
                     System.out.println(message);
-                    session.getBasicRemote().sendText(createMessageObj(message, message.getName().equals(userName)).toString());
+                    if (message.getImageContent() == null) {
+                        session.getBasicRemote().sendText(createMessageObj(message, message.getName().equals(userName)).toString());
+
+                    } else {
+                        session.getBasicRemote().sendText(createImageObj(message, message.getName().equals(userName)).toString());
+                    }
                 }
 
                 UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
@@ -141,7 +146,7 @@ public class ChatSocket {
                 .add("isSender", isSender)
                 .add("user", msg.getName())
                 .add("date", new SimpleDateFormat(datePattern).format(msg.getDateCreated()))
-                .add("image", "") // images/user_18_3_2019_9_29_29_299
+                .add("image", msg.getTextContent()) // images/user_18_3_2019_9_29_29_299
                 .build();
     }
 
@@ -151,7 +156,7 @@ public class ChatSocket {
         String nickName = userSession.getUserProperties().get("nickName").toString();
         // hello -> message hello world
         // image
-        Message messageObj = new Message(userName, new Date(), null, message);
+        Message messageObj = new Message(userName, new Date(), null, message.substring(message.indexOf(" ") + 1));
 
         try {
             // Put message to DAO
@@ -160,8 +165,13 @@ public class ChatSocket {
             mm.addMessage(messageObj);
 
             for (Session session : userList) {
-                session.getBasicRemote().sendText(createMessageObj(messageObj,
-                        session.getUserProperties().get("userName").equals(userName)).toString());
+                if (message.split(" ")[0].equals("message")) {
+                    session.getBasicRemote().sendText(createMessageObj(messageObj,
+                            session.getUserProperties().get("userName").equals(userName)).toString());
+                } else {
+                    session.getBasicRemote().sendText(createImageObj(messageObj,
+                            session.getUserProperties().get("userName").equals(userName)).toString());
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
