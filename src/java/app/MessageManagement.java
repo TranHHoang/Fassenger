@@ -40,4 +40,8 @@ public class MessageManagement {
     public ArrayList<Message> getMessagesBeforeDate(int numOfMess, Date lastDate) {
         return dao.getMessagesBeforeDate(numOfMess, lastDate);
     }
+    
+    public Message getMessagesByDate(Date lastDate) {
+        return dao.getMessagesByDate(lastDate);
+    }
 }

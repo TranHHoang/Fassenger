@@ -6,13 +6,10 @@
 package socket;
 
 import app.MessageManagement;
-import app.UserManagement;
 import app.UserOnlineManagement;
-import java.util.Base64;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -66,6 +63,7 @@ public class ChatSocket {
                 List<Message> messages = mm.getMessagesBeforeDate(200, new Date());
 
                 for (Message message : messages) {
+                    System.out.println(message);
                     session.getBasicRemote().sendText(createMessageObj(message, message.getName().equals(userName)).toString());
                 }
 
@@ -121,8 +119,29 @@ public class ChatSocket {
                 .add("isSender", isSender)
                 .add("user", msg.getName())
                 .add("date", new SimpleDateFormat(datePattern).format(msg.getDateCreated()))
-                .add("image", msg.getTextContent())
                 .add("text", msg.getTextContent())
+                .build();
+    }
+
+    private JsonObject createImageObj(Message msg, boolean isSender) throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(new Date());
+        cal2.setTime(msg.getDateCreated());
+        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+
+        String datePattern = "hh:mm a";
+        if (!sameDay) {
+            datePattern = "dd/MM/yy 'at' " + datePattern;
+        }
+
+        return Json.createObjectBuilder()
+                .add("type", TYPE_MESSAGE)
+                .add("isSender", isSender)
+                .add("user", msg.getName())
+                .add("date", new SimpleDateFormat(datePattern).format(msg.getDateCreated()))
+                .add("image", "") // images/user_18_3_2019_9_29_29_299
                 .build();
     }
 
@@ -130,7 +149,8 @@ public class ChatSocket {
     public void onMessage(String message, Session userSession) throws IOException {
         String userName = userSession.getUserProperties().get("userName").toString();
         String nickName = userSession.getUserProperties().get("nickName").toString();
-
+        // hello -> message hello world
+        // image
         Message messageObj = new Message(userName, new Date(), null, message);
 
         try {

@@ -56,7 +56,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>/image</url-pattern>
+        <url-pattern>/image/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>11520</session-timeout>

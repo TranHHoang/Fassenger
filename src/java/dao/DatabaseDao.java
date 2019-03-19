@@ -139,7 +139,7 @@ public class DatabaseDao {
         ArrayList<Message> result = new ArrayList<>();
         try {
             String sql = "select top (?) * from " + DatabaseTable.MESSAGE_TABLE
-                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + " < ? order by " + DatabaseTable.MessageTable.DATE_CREATED;
+                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + " <= ? order by " + DatabaseTable.MessageTable.DATE_CREATED;
 
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1, numberOfMess);
@@ -156,6 +156,28 @@ public class DatabaseDao {
             e.printStackTrace();
         }
         return result;
+    }
+    
+    public Message getMessagesByDate(Date lastDate) {
+        ArrayList<Message> result = new ArrayList<>();
+        try {
+            String sql = "select * from " + DatabaseTable.MESSAGE_TABLE
+                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + " = ?";
+
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setTimestamp(1, new Timestamp(lastDate.getTime()));
+
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                result.add(new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
+                        new java.util.Date(rs.getTimestamp(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
+                        rs.getBinaryStream(DatabaseTable.MessageTable.IMAGE_CONTENT),
+                        rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result.get(0);
     }
 
     /*the following code is for user online table*/

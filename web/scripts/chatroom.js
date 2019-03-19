@@ -106,7 +106,7 @@ function openConnection() {
 
 function sendMessage() {
     if (webSocket !== null && webSocket.readyState == WebSocket.OPEN) {
-        webSocket.send(userInput.value);
+        webSocket.send("message " + userInput.value);
         userInput.value = "";
     }
 }
