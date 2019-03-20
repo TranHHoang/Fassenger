@@ -60,7 +60,7 @@ public class ChatSocket {
             try {
                 // Load message from DAO
                 MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
-                List<Message> messages = mm.getMessagesBeforeDate(200, new Date());
+                List<Message> messages = mm.getMessagesBeforeDate(500, new Date());
 
                 for (Message message : messages) {
                     System.out.println(message);
@@ -157,12 +157,14 @@ public class ChatSocket {
         // hello -> message hello
         // image 1_dDad -> 1_adasda
         Message messageObj = new Message(userName, new Date(), null, message.substring(message.indexOf(" ") + 1));
-        
+
         try {
             // Put message to DAO
             MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
 
-            mm.addMessage(messageObj);
+            if (message.split(" ")[0].equals("message")) {
+                mm.addMessage(messageObj);
+            }
 
             for (Session session : userList) {
                 if (message.split(" ")[0].equals("message")) {

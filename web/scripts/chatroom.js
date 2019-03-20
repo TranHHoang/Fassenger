@@ -40,6 +40,7 @@ function openConnection() {
                         date.classList.add('date');
                         avatar.classList.add('small-ava');
                         imgChat.src = "./image/" + responseObj.image;
+                        imgChat.classList.add('small-image');
 
                         avatar.appendChild(avaImg);
 

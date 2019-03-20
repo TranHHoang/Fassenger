@@ -3,8 +3,14 @@
     --input-padding-y: .75rem;
 }
 
+.small-image {
+    max-width: 256px;
+    max-height: 256px;
+    padding: .75rem;
+}
+
 .user-container {
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
 }
 
 .user-online-name {
@@ -47,7 +53,7 @@
     justify-content: flex-end;
     align-items: center;
 
-    margin: .1rem;
+    margin: .2rem;
     text-align: right;
 }
 
@@ -56,7 +62,7 @@
     justify-content: flex-start;
     align-items: center;
 
-    margin: .1rem;
+    margin: .2rem;
     text-align: left;
 }
 

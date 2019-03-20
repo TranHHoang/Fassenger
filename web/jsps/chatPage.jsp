@@ -107,18 +107,15 @@
                 document.getElementById(button).click();
             }
 
-            $("#input-btn").change(function (e) {
+            $("#input-btn").change(() => {
             ${"clickHere"}.click();
             });
 
 // loi nhap file
-            $("#imageInputField").change(function (e) {
-                console.log("123123123123")
+            $("#imageInputField").change(() => {
+//                console.log("123123123123")
                 var form = document.querySelector('form');
                 var formData = new FormData(form);
-//                formData.append('file', file);
-//                console.log($('form')[0]);
-//                console.log(document.getElementById('formChatImage'));
 
                 $.ajax({
                     type: "POST",
@@ -126,16 +123,11 @@
                     processData: false,
                     url: "image",
                     data: formData,
-                    success: function (responseText) {
-                        webSocket.send("image " + responseText);
+                    success: imageUrl => {
+                        webSocket.send("image " + imageUrl);
                     }
                 });
             });
-
-            function sendImage() {
-
-            }
-
 
         </script>
 
