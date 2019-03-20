@@ -137,7 +137,7 @@ public class ImageServlet extends HttpServlet {
         SimpleDateFormat format = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss_SSS");
         
         messageManagement.addMessage(new Message(session.getAttribute("userName").toString(), date, image, session.getAttribute("userName") + "_" + format.format(date)));
-
+        session.setAttribute("image", session.getAttribute("userName") + "_" + format.format(date));
         response.sendRedirect("./");
     }
 

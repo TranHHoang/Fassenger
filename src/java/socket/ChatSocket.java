@@ -154,10 +154,10 @@ public class ChatSocket {
     public void onMessage(String message, Session userSession) throws IOException {
         String userName = userSession.getUserProperties().get("userName").toString();
         String nickName = userSession.getUserProperties().get("nickName").toString();
-        // hello -> message hello world
-        // image
+        // hello -> message hello
+        // image 1_dDad -> 1_adasda
         Message messageObj = new Message(userName, new Date(), null, message.substring(message.indexOf(" ") + 1));
-
+        
         try {
             // Put message to DAO
             MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));

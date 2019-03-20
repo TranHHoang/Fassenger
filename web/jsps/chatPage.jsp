@@ -4,6 +4,7 @@
     Author     : Kiruu
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -31,13 +32,13 @@
         <!--fix this change to dynamic-->
         <!--<link rel="stylesheet" href="./styles/bootstrap/css/bootstrap.min.css">-->
 
-        
+
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="./styles/style.css">
         <script
-            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+            src="http://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     </head>
     <body onload="openConnection()" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
@@ -66,15 +67,14 @@
                                 </div>
                                 <div>
                                     <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem;" id="userInput" class="form-control col-md-9" placeholder="Write something here...">
-                                    <button onClick="clickBtn('sendImage')" title="Send an image" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="far fa-image"></i></button>
+                                    <button onClick="clickBtn('imageInputField')" title="Send an image" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="far fa-image"></i></button>
                                     <button title="Send an attachment" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-paperclip"></i></button>
                                     <button id="sendMessageBtn" onclick="sendMessage()" title="Press ENTER to send" class="btn btn-primary" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-arrow-right"></i></button>
-                                
-                                    <form action="image" method="POST" enctype="multipart/form-data" style="display: none">
-                                        <input id="sendImage" name="uploadImage" type="file"/>
-                                        <input type='submit' id='sendImageBtn'>
+
+                                    <form id="formChatImage" action="image" method="POST" enctype="multipart/form-data" style="display: none">
+                                        <input id="imageInputField" name="uploadImage" type="file"/>
                                     </form>
-                                    
+
                                 </div>
                             </div>
 
@@ -104,18 +104,38 @@
 
         <script>
             function clickBtn(button) {
-                document.getElementById(button).click()
+                document.getElementById(button).click();
             }
 
             $("#input-btn").change(function (e) {
-                ${"clickHere"}.click()
+            ${"clickHere"}.click();
             });
-            
-            $("#sendImage").change(function (e) {
-                
-                ${"sendImageBtn"}.click()
-                    
+
+// loi nhap file
+            $("#imageInputField").change(function (e) {
+                console.log("123123123123")
+                var form = document.querySelector('form');
+                var formData = new FormData(form);
+//                formData.append('file', file);
+//                console.log($('form')[0]);
+//                console.log(document.getElementById('formChatImage'));
+
+                $.ajax({
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    url: "image",
+                    data: formData,
+                    success: function (responseText) {
+                        webSocket.send("image " + responseText);
+                    }
+                });
             });
+
+            function sendImage() {
+
+            }
+
 
         </script>
 
