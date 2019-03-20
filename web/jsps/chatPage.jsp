@@ -28,7 +28,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Chat page</title>
 
-        <script src="./scripts/chatroom.js"></script>
+        <script src="./scripts/chatRoom.js"></script>
         <!--fix this change to dynamic-->
         <!--<link rel="stylesheet" href="./styles/bootstrap/css/bootstrap.min.css">-->
 
