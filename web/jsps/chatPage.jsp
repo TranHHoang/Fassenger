@@ -1,37 +1,13 @@
-<%-- 
-    Document   : chatPage
-    Created on : Mar 5, 2019, 8:53:37 AM
-    Author     : Kiruu
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <!--    <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <title>Chat page</title>
-    
-            <script src="./scripts/chatroom.js"></script>
-            <script>openConnection()</script>
-            fix this change to dynamic
-        </head>
-        <body>
-            <input id="textMessage" type="text" />
-            <input onclick="sendMessage()" value="Send Message" type="button" /> <br/><br/>
-            <textarea id="textAreaMessage" rows="10" cols="50"></textarea>
-            <a href="logout">Sign out</a>
-            
-        </body>-->
     <head>
         <meta http-equiv="refresh" content="${pageContext.session.maxInactiveInterval};">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Chat page</title>
 
         <script src="./scripts/chatRoom.js"></script>
-        <!--fix this change to dynamic-->
-        <!--<link rel="stylesheet" href="./styles/bootstrap/css/bootstrap.min.css">-->
-
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -43,9 +19,6 @@
     </head>
     <body onload="openConnection()" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
           url('https://source.unsplash.com/featured/1280x720/?nature,travel,wallpapers,backgrounds,weather,technology') no-repeat fixed center; background-size: cover">
-        <!--<input id="textMessage" type="text" />-->
-        <!--<input onclick="sendMessage()" value="Send Message" type="button" /> <br/><br/>-->
-        <!--<textarea id="textAreaMessage" rows="10" cols="50"></textarea>-->
         <div class="container" style="max-width: 100%">
             <div class="row">
                 <div class="col-12">
@@ -55,15 +28,11 @@
                             <div class="col" style="display: flex; flex-flow: column;">
                                 <h5 class="card-title text-center h4"><b style="margin-right: .5rem">Online</b><i class="fas fa-signal"></i></h5>
                                 <div id="userOnlineBox" class="col-md-11 scrollbar scrollbar-near-moon" style="overflow-y: scroll; overflow-x: hidden; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem">
-
-                                    <!--<textarea id="textAreaMessage" rows="10" cols="50"></textarea>-->
                                 </div>
                             </div>
 
                             <div class="col-7" style="display: flex; flex-flow: column;">
                                 <div id="chatBox" class="col-md-11 scrollbar scrollbar-near-moon" style="overflow-y: scroll; overflow-x: hidden; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem; height: 78vh">
-
-                                    <!--<textarea id="textAreaMessage" rows="10" cols="50"></textarea>-->
                                 </div>
                                 <div>
                                     <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem;" id="userInput" class="form-control col-md-9" placeholder="Write something here...">
@@ -74,7 +43,6 @@
                                     <form id="formChatImage" action="image" method="POST" enctype="multipart/form-data" style="display: none">
                                         <input id="imageInputField" name="uploadImage" type="file"/>
                                     </form>
-
                                 </div>
                             </div>
 
@@ -111,9 +79,7 @@
             ${"clickHere"}.click();
             });
 
-// loi nhap file
             $("#imageInputField").change(() => {
-//                console.log("123123123123")
                 var form = document.querySelector('form');
                 var formData = new FormData(form);
 
@@ -128,8 +94,6 @@
                     }
                 });
             });
-
         </script>
-
     </body>
 </html>

@@ -1,9 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : Mar 5, 2019, 8:40:48 AM
-    Author     : Kiruu
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -11,62 +5,16 @@
     <c:if test="${not empty userName}">
         <c:redirect url="./room"></c:redirect>
     </c:if>
-    <!--    <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <title>Login Page</title>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            
-        </head>
-            <body>
-                <h1>Login</h1>
-                <form action="login" method="POST">
-                    Username:<input name="userName" type="text"/> 
-                    Password:<input name="password" type="text"/>
-                    <input type="submit" name="action" value="login"/>
-                </form>
-        
-                <h1>Register</h1>
-                <form action="register" method="POST" enctype="multipart/form-data">
-                    Username:<input name="userName" type="text"/> 
-                    Password:<input name="password" type="text"/>
-                    File: <input type="file" name="avatar" accept="image/*"/>
-                    <input type="submit" name="action" value="create" />
-                </form>
-                <h1>${message}</h1>
-            </body>-->
-
-
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login Page</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!--<link rel="stylesheet" href="E:/IT/0_University_Program/Spring 2019/PRJ321/Fassenger/web/styles/bootstrap/css/bootstrap.min.css">-->
-
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="./styles/style.css">
 
     </head>
-    <!--        <body>
-                <h1>Login</h1>
-                <form action="login" method="POST">
-                    Username:<input name="userName" type="text"/> 
-                    Password:<input name="password" type="text"/>
-                    <input type="submit" name="action" value="login"/>
-                </form>
-        
-                <h1>Register</h1>
-                <form action="register" method="POST" enctype="multipart/form-data">
-                    Username:<input name="userName" type="text"/> 
-                    Password:<input name="password" type="text"/>
-                    File: <input type="file" name="avatar" accept="image/*"/>
-                    <input type="submit" name="action" value="create" />
-                </form>
-            </body>
-    
-    -->
     <body style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
           url('https://source.unsplash.com/featured/1280x720/?nature,travel,wallpapers,backgrounds,weather,technology') no-repeat fixed center; background-size: cover">
         <div class="container">
@@ -145,7 +93,6 @@
                                     <button class="btn btn-lg btn-success btn-block text-uppercase" type="submit"><i class="fas fa-user-plus"></i> Sign up</button>
                                 </form>
                             </div>
-
                         </div>
                     </div>
                 </div>

@@ -159,7 +159,7 @@ public class DatabaseDao {
         }
         return result;
     }
-    
+
     public Message getMessagesByDate(Date lastDate) {
 //        ArrayList<Message> result = new ArrayList<>();
         try {
@@ -172,7 +172,7 @@ public class DatabaseDao {
 
             ResultSet rs = pst.executeQuery();
             rs.next();
-            
+
             byte[] image = rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT);
 
             return new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),

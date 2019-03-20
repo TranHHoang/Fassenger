@@ -4,11 +4,7 @@ var audioSound = null;
 function openConnection() {
     if (webSocket === null) {
         webSocket = new WebSocket(`ws://${window.location.host}/Fassenger/chatroom`);
-
-        webSocket.onopen = event => {
-
-        }
-
+        
         webSocket.onmessage = event => {
             var responseObj = JSON.parse(event.data);
 
@@ -116,7 +112,7 @@ function openConnection() {
 }
 
 function sendMessage() {
-    if (webSocket !== null && webSocket.readyState == WebSocket.OPEN) {
+    if (webSocket !== null && webSocket.readyState === WebSocket.OPEN) {
         webSocket.send("message " + userInput.value);
         userInput.value = "";
     }

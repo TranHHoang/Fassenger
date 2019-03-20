@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package app;
 
 import dao.DatabaseDao;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import models.Message;
 
 /**
@@ -40,7 +33,7 @@ public class MessageManagement {
     public ArrayList<Message> getMessagesBeforeDate(int numOfMess, Date lastDate) {
         return dao.getMessagesBeforeDate(numOfMess, lastDate);
     }
-    
+
     public Message getMessagesByDate(Date lastDate) {
         return dao.getMessagesByDate(lastDate);
     }

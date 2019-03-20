@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package socket;
 
 import app.MessageManagement;
@@ -202,10 +197,6 @@ public class ChatSocket {
         }
 
         userList.remove(session);
-
-//        for (Session s : userList) {
-//            s.getBasicRemote().sendText(session.getUserProperties().get("userName") + " offline");
-//        }
     }
 
     @OnError
