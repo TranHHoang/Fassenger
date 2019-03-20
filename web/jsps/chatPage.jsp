@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="refresh" content="${pageContext.session.maxInactiveInterval};">
+        <meta http-equiv="refresh" content="11280">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Chat page</title>
 
@@ -26,7 +26,7 @@
 
                         <div class="card-body row">
                             <div class="col" style="display: flex; flex-flow: column;">
-                                <h5 class="card-title text-center h4"><b style="margin-right: .5rem">Online</b><i class="fas fa-signal"></i></h5>
+                                <h5 class="card-title text-center h4"><b style="margin-right: .5rem">Who is online?</b></h5>
                                 <div id="userOnlineBox" class="col-md-11 scrollbar scrollbar-near-moon" style="overflow-y: scroll; overflow-x: hidden; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem">
                                 </div>
                             </div>

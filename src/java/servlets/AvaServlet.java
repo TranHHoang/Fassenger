@@ -1,6 +1,7 @@
 package servlets;
 
 import app.UserManagement;
+import app.exception.RequestNotFoundException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.BufferedInputStream;
@@ -22,6 +23,7 @@ import models.User;
  * @author Kiruu
  */
 public class AvaServlet extends HttpServlet {
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -33,9 +35,9 @@ public class AvaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String userName = request.getRequestURL().toString().split("/")[5];
-        
+
         DatabaseDao dao = null;
 
         try {
@@ -44,27 +46,35 @@ public class AvaServlet extends HttpServlet {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         UserManagement userManagement = new UserManagement(dao);
-        
+
         InputStream is = null;
         User user = userManagement.getUserByName(userName);
-        
-        
-        if (user.getAvatar() == null) {
-            is = new BufferedInputStream(new FileInputStream(getServletContext().getRealPath("/defaultImage/ava.jpg")));
-        
-        } else {
-            is = user.getAvatar();
-        }
 
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int read;
-        byte[] data = new byte[1024];
-        while ((read = is.read(data, 0, data.length)) != -1) {
-            buffer.write(data, 0, read);
-        }
+        try {
+            if (user != null) {
+                if (user.getAvatar() == null) {
+                    is = new BufferedInputStream(new FileInputStream(getServletContext().getRealPath("/defaultImage/ava.jpg")));
+                } else {
+                    is = user.getAvatar();
+                }
 
-        buffer.flush();
-        
-        response.getOutputStream().write(buffer.toByteArray());
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                int read;
+                byte[] data = new byte[1024];
+                while ((read = is.read(data, 0, data.length)) != -1) {
+                    buffer.write(data, 0, read);
+                }
+
+                buffer.flush();
+
+                response.getOutputStream().write(buffer.toByteArray());
+            } else {
+                throw new RequestNotFoundException("Request not found! User '" + userName + "' not existed");
+            }
+        } catch (RequestNotFoundException e) {
+            request.setAttribute("errorCode", e.getErrorCode());
+            request.setAttribute("errorMessage", e.getMessage());
+            request.getRequestDispatcher("/jsps/errorPage.jsp").forward(request, response);
+        }
     }
 }
