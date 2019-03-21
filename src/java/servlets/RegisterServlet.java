@@ -3,6 +3,7 @@ package servlets;
 import app.UserManagement;
 import dao.DatabaseDao;
 import dao.context.DBContext;
+import encryptor.PasswordEncryptor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -40,7 +41,7 @@ public class RegisterServlet extends HttpServlet {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
+        String password = PasswordEncryptor.getSHA(request.getParameter("password"));
 
         UserManagement userManagement = new UserManagement(dao);
 

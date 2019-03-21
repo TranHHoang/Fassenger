@@ -4,6 +4,7 @@ import app.UserManagement;
 import app.UserOnlineManagement;
 import dao.DatabaseDao;
 import dao.context.DBContext;
+import encryptor.PasswordEncryptor;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +48,7 @@ public class LoginServlet extends HttpServlet {
         UserManagement userManagement = new UserManagement(dao);
 
         String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
+        String password = PasswordEncryptor.getSHA(request.getParameter("password"));
 
         User user = userManagement.getUserByName(userName);
 
