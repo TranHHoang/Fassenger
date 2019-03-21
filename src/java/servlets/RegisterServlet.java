@@ -1,11 +1,11 @@
 package servlets;
 
 import app.UserManagement;
+import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
-import encryptor.PasswordEncryptor;
+import servlets.encrypt.PasswordEncryptor;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -36,19 +36,19 @@ public class RegisterServlet extends HttpServlet {
         DatabaseDao dao = null;
         try {
             dao = DatabaseDao.getInstance(DBContext.getInstance());
-
-        } catch (Exception ex) {
-            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InternalException ex) {
+            throw ex;
         }
+        
         String userName = request.getParameter("userName");
         String password = PasswordEncryptor.getSHA(request.getParameter("password"));
 
         UserManagement userManagement = new UserManagement(dao);
-
         userManagement.addUser(new User(userName, userName, password, null));
 
         request.setAttribute("status", "SUCCESS");
         request.setAttribute("message", "Register successful! You can now sign in.");
+
         RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
         view.forward(request, response);
     }

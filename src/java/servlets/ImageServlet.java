@@ -6,12 +6,12 @@
 package servlets;
 
 import app.MessageManagement;
+import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +30,7 @@ import models.Message;
  * @author Kiruu
  */
 public class ImageServlet extends HttpServlet {
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -51,14 +52,14 @@ public class ImageServlet extends HttpServlet {
         try {
             dates = format.parse(date);
         } catch (ParseException ex) {
-            Logger.getLogger(ImageServlet.class.getName()).log(Level.SEVERE, null, ex);
+            throw new InternalException(ex.getMessage());
         }
 
         DatabaseDao dao = null;
         try {
             dao = DatabaseDao.getInstance(DBContext.getInstance());
-        } catch (Exception ex) {
-            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InternalException ex) {
+            throw ex;
         }
 
         MessageManagement messageManagement = MessageManagement.getInstance(dao);
@@ -69,7 +70,6 @@ public class ImageServlet extends HttpServlet {
         int read;
         byte[] data = new byte[1024];
         while ((read = is.read(data, 0, data.length)) != -1) {
-            System.out.println("hello");
             buffer.write(data, 0, read);
         }
 
@@ -95,9 +95,8 @@ public class ImageServlet extends HttpServlet {
         DatabaseDao dao = null;
         try {
             dao = DatabaseDao.getInstance(DBContext.getInstance());
-
-        } catch (Exception ex) {
-            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InternalException ex) {
+            throw ex;
         }
         MessageManagement messageManagement = MessageManagement.getInstance(dao);
         Date date = new Date();

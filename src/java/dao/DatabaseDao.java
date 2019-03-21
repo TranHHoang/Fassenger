@@ -1,5 +1,6 @@
 package dao;
 
+import app.exception.InternalException;
 import dao.DatabaseTable.MessageTable;
 import dao.DatabaseTable.UserTable;
 import dao.context.DBContext;
@@ -25,18 +26,18 @@ public class DatabaseDao {
 
     private static DatabaseDao instance;
 
-    private DatabaseDao(DBContext context) throws Exception {
+    private DatabaseDao(DBContext context) throws InternalException {
         connection = context.getConnection();
     }
 
-    public static DatabaseDao getInstance(DBContext context) throws Exception {
+    public static DatabaseDao getInstance(DBContext context) throws InternalException {
         if (instance == null) {
             instance = new DatabaseDao(context);
         }
         return instance;
     }
 
-    public List<User> getAllUser() {
+    public List<User> getAllUser() throws InternalException {
         List<User> userList = new ArrayList<>();
 
         try {
@@ -53,14 +54,14 @@ public class DatabaseDao {
                         rs.getBinaryStream(UserTable.AVATAR)
                 ));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
 
         return userList;
     }
 
-    public void editUserByName(User user) {
+    public void editUserByName(User user) throws InternalException {
         try {
             String sql = String.format("update %s set %s = ?, %s = ?, %s = ? where %s = ?",
                     DatabaseTable.USER_TABLE,
@@ -77,12 +78,12 @@ public class DatabaseDao {
             statement.setString(4, user.getName());
 
             statement.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
     }
 
-    public void addUser(User user) {
+    public void addUser(User user) throws InternalException {
         try {
             String sql = String.format("insert into %s values (NEWID(), ?, ?, ?, ?) ", DatabaseTable.USER_TABLE);
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -92,12 +93,12 @@ public class DatabaseDao {
             statement.setBinaryStream(4, user.getAvatar());
 
             statement.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
     }
 
-    public User getUserByName(String name) {
+    public User getUserByName(String name) throws InternalException {
         try {
             String sql = "select * from " + DatabaseTable.USER_TABLE + " where " + UserTable.USER_NAME + " = ?";
 
@@ -113,14 +114,13 @@ public class DatabaseDao {
                     rs.getString(UserTable.PASSWORD),
                     rs.getBinaryStream(UserTable.AVATAR));
 
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
-        return null;
     }
 
     /* sql query for Fassenger Message table*/
-    public void addMessage(Message msg) {
+    public void addMessage(Message msg) throws InternalException {
         try {
             String sql = "insert into " + DatabaseTable.MESSAGE_TABLE + " values (NEWID(), ?, ?, ?, ?)";
 
@@ -132,12 +132,12 @@ public class DatabaseDao {
             pst.setString(MessageTable.ColumnOrder.TEXT_CONTENT.ordinal(), msg.getTextContent());
 
             pst.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
     }
 
-    public ArrayList<Message> getMessagesBeforeDate(int numberOfMess, Date lastDate) {
+    public ArrayList<Message> getMessagesBeforeDate(int numberOfMess, Date lastDate) throws InternalException {
         ArrayList<Message> result = new ArrayList<>();
         try {
             String sql = "select top (?) * from " + DatabaseTable.MESSAGE_TABLE
@@ -154,14 +154,13 @@ public class DatabaseDao {
                         rs.getBinaryStream(DatabaseTable.MessageTable.IMAGE_CONTENT),
                         rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT)));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
         return result;
     }
 
-    public Message getMessagesByDate(Date lastDate) {
-//        ArrayList<Message> result = new ArrayList<>();
+    public Message getMessagesByDate(Date lastDate) throws InternalException {
         try {
             String sql = "select * from " + DatabaseTable.MESSAGE_TABLE
                     + " where " + DatabaseTable.MessageTable.DATE_CREATED + "= ?";
@@ -180,13 +179,12 @@ public class DatabaseDao {
                     new ByteArrayInputStream(image),
                     rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new InternalException(e.getMessage());
         }
-        return null;
     }
 
     /*the following code is for user online table*/
-    public ArrayList<User> getAllUserOnline() {
+    public ArrayList<User> getAllUserOnline() throws InternalException {
         ArrayList<User> users = new ArrayList<>();
         try {
             String sql = "select " + DatabaseTable.UserOnlineTable.USER_NAME
@@ -196,36 +194,36 @@ public class DatabaseDao {
             while (rs.next()) {
                 users.add(new User(rs.getString(1)));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
         return users;
     }
 
-    public void addUserOnline(String userName) {
+    public void addUserOnline(String userName) throws InternalException {
         try {
             String sql = "insert into " + DatabaseTable.USER_ONLINE_TABLE + " values(?)";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setString(1, userName);
             pst.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
     }
 
-    public void deleteUserOnline(String userName) {
+    public void deleteUserOnline(String userName) throws InternalException {
         try {
             String sql = "delete " + DatabaseTable.USER_ONLINE_TABLE
                     + " where " + DatabaseTable.UserOnlineTable.USER_NAME + " =  ? ";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setString(1, userName);
             pst.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
     }
 
-    public boolean isUserOnline(String name) {
+    public boolean isUserOnline(String name) throws InternalException {
         ArrayList<User> users = new ArrayList<>();
         try {
 
@@ -237,8 +235,8 @@ public class DatabaseDao {
             while (rs.next()) {
                 users.add(new User(rs.getString(DatabaseTable.UserOnlineTable.USER_NAME)));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
         }
         if (users.size() > 0) {
             return true;

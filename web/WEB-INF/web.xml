@@ -4,12 +4,25 @@
     xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>servlets.filters.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/ava/*</url-pattern>
+        <url-pattern>/image/*</url-pattern>
+    </filter-mapping>
     <error-page>
         <error-code>404</error-code>
         <location>/static/404NotFound.html</location>
     </error-page>
     <error-page>
         <error-code>500</error-code>
+        <location>/static/500InternalError.html</location>
+    </error-page>
+    <error-page>
+        <exception-type>app.exception.InternalException</exception-type>
         <location>/static/500InternalError.html</location>
     </error-page>
     <servlet>

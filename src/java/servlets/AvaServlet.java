@@ -1,7 +1,6 @@
 package servlets;
 
 import app.UserManagement;
-import app.exception.RequestNotFoundException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.BufferedInputStream;
@@ -9,7 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -50,30 +48,26 @@ public class AvaServlet extends HttpServlet {
         InputStream is = null;
         User user = userManagement.getUserByName(userName);
 
-        try {
-            if (user != null) {
-                if (user.getAvatar() == null) {
-                    is = new BufferedInputStream(new FileInputStream(getServletContext().getRealPath("/defaultImage/ava.jpg")));
-                } else {
-                    is = user.getAvatar();
-                }
-
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                int read;
-                byte[] data = new byte[1024];
-                while ((read = is.read(data, 0, data.length)) != -1) {
-                    buffer.write(data, 0, read);
-                }
-
-                buffer.flush();
-
-                response.getOutputStream().write(buffer.toByteArray());
+        if (user != null) {
+            if (user.getAvatar() == null) {
+                is = new BufferedInputStream(new FileInputStream(getServletContext().getRealPath("/defaultImage/ava.jpg")));
             } else {
-                throw new RequestNotFoundException("Request not found! User '" + userName + "' not existed");
+                is = user.getAvatar();
             }
-        } catch (RequestNotFoundException e) {
-            request.setAttribute("errorCode", e.getErrorCode());
-            request.setAttribute("errorMessage", e.getMessage());
+
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int read;
+            byte[] data = new byte[1024];
+            while ((read = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, read);
+            }
+
+            buffer.flush();
+
+            response.getOutputStream().write(buffer.toByteArray());
+        } else {
+            request.setAttribute("errorCode", 404);
+            request.setAttribute("errorMessage", "User not found");
             request.getRequestDispatcher("/jsps/errorPage.jsp").forward(request, response);
         }
     }

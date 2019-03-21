@@ -2,9 +2,10 @@ package servlets;
 
 import app.UserManagement;
 import app.UserOnlineManagement;
+import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
-import encryptor.PasswordEncryptor;
+import servlets.encrypt.PasswordEncryptor;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +28,7 @@ public class LoginServlet extends HttpServlet {
                 RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
                 view.forward(request, response);
             }
-        } catch (Exception e) {
+        } catch (IOException | ServletException e) {
             response.sendRedirect("./"); // userName == null
         }
         response.sendRedirect("./"); // wrong username + password
@@ -40,8 +41,8 @@ public class LoginServlet extends HttpServlet {
 
         try {
             dao = DatabaseDao.getInstance(DBContext.getInstance());
-        } catch (Exception ex) {
-            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InternalException ex) {
+            throw ex;
         }
         UserOnlineManagement userOnline = new UserOnlineManagement(dao);
         
@@ -54,16 +55,16 @@ public class LoginServlet extends HttpServlet {
 
         if (user != null && user.getPassword().equals(password)) {
             HttpSession session = request.getSession();
-            session.setMaxInactiveInterval(1 * 60);
             session.setAttribute("nickName", user.getNickname());
             session.setAttribute("userName", userName);
             userOnline.addOnlineUser(userName);
+            
             response.sendRedirect("./room");
         } else {
             request.setAttribute("status", "FAILED");
             request.setAttribute("message", "Incorrect user name or password!");
-            RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
-            view.forward(request, response);
+            
+            request.getRequestDispatcher("jsps/login.jsp").forward(request, response);
         }
     }
 }

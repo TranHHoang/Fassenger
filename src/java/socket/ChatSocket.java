@@ -2,6 +2,7 @@ package socket;
 
 import app.MessageManagement;
 import app.UserOnlineManagement;
+import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
@@ -12,8 +13,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpSession;
@@ -41,7 +40,7 @@ public class ChatSocket {
     private static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
 
     @OnOpen
-    public void onOpen(Session session, EndpointConfig config) {
+    public void onOpen(Session session, EndpointConfig config) throws InternalException {
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 
         if (httpSession.getAttribute("userName") != null) {
@@ -83,7 +82,7 @@ public class ChatSocket {
 
             } catch (Exception ex) {
                 // Error exception
-                ex.printStackTrace();
+                throw new InternalException(ex.getMessage());
             }
         }
     }
@@ -101,7 +100,7 @@ public class ChatSocket {
                 .build();
     }
 
-    private JsonObject createMessageObj(Message msg, boolean isSender) throws Exception {
+    private JsonObject createMessageObj(Message msg, boolean isSender) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(new Date());
@@ -146,7 +145,7 @@ public class ChatSocket {
     }
 
     @OnMessage
-    public void onMessage(String message, Session userSession) throws IOException {
+    public void onMessage(String message, Session userSession) throws InternalException {
         String userName = userSession.getUserProperties().get("userName").toString();
         String nickName = userSession.getUserProperties().get("nickName").toString();
         // hello -> message hello
@@ -171,12 +170,12 @@ public class ChatSocket {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new InternalException(ex.getMessage());
         }
     }
 
     @OnClose
-    public void onClose(Session session) throws IOException {
+    public void onClose(Session session) throws InternalException {
         String userName = session.getUserProperties().get("userName").toString();
 
         UserOnlineManagement uom;
@@ -192,8 +191,8 @@ public class ChatSocket {
                     }
                 }
             }
-        } catch (Exception ex) {
-            Logger.getLogger(ChatSocket.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InternalException | IOException ex) {
+            throw new InternalException(ex.getMessage());
         }
 
         userList.remove(session);

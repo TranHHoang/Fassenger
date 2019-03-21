@@ -9,8 +9,9 @@ package app.exception;
  *
  * @author TranHoang
  */
-public class RequestNotFoundException extends FassengerException {
-    public RequestNotFoundException(String message) {
-        super(message, 404);
-    }
+public class InternalException extends FassengerException {
+
+    public InternalException(String message) {
+        super(message, 500);
+    }    
 }

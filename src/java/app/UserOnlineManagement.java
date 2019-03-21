@@ -5,6 +5,7 @@
  */
 package app;
 
+import app.exception.InternalException;
 import dao.DatabaseDao;
 import java.util.ArrayList;
 import models.User;
@@ -24,19 +25,19 @@ public class UserOnlineManagement {
         this.dao = dao;
     }
 
-    public ArrayList<User> getAllOnlineUser() {
+    public ArrayList<User> getAllOnlineUser() throws InternalException {
         return dao.getAllUserOnline();
     }
 
-    public void addOnlineUser(String userName) {
+    public void addOnlineUser(String userName) throws InternalException {
         dao.addUserOnline(userName);
     }
 
-    public void deleteOnlineUser(String userName) {
+    public void deleteOnlineUser(String userName) throws InternalException {
         dao.deleteUserOnline(userName);
     }
 
-    public boolean isUserOnline(String userName) {
+    public boolean isUserOnline(String userName) throws InternalException {
         return dao.isUserOnline(userName);
     }
 }

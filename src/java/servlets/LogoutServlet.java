@@ -40,6 +40,7 @@ public class LogoutServlet extends HttpServlet {
         UserOnlineManagement userOnline = new UserOnlineManagement(dao);
         userOnline.deleteOnlineUser(session.getAttribute("userName").toString());
         session.invalidate();
+        
         response.sendRedirect("./");
     }
 

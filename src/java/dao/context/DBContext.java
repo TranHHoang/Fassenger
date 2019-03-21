@@ -1,7 +1,9 @@
 package dao.context;
 
+import app.exception.InternalException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBContext {
 
@@ -17,10 +19,14 @@ public class DBContext {
         return instance;
     }
 
-    public Connection getConnection() throws Exception {
-        String url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName;
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        return DriverManager.getConnection(url, userID, password);
+    public Connection getConnection() throws InternalException {
+        try {
+            String url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName;
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            return DriverManager.getConnection(url, userID, password);
+        } catch (SQLException | ClassNotFoundException ex) {
+            throw new InternalException(ex.getMessage());
+        }
     }
 
     private final String serverName = "localhost";

@@ -1,13 +1,11 @@
 package servlets;
 
 import app.UserManagement;
+import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,11 +37,8 @@ public class ChatServlet extends HttpServlet {
                 RequestDispatcher view = request.getRequestDispatcher("jsps/chatPage.jsp");
                 view.forward(request, response);
             }
-        } catch (Exception e) {
-            //userName not found
-            System.out.println(e);
+        } catch (NullPointerException e) {
             response.sendRedirect("./");
-
         }
     }
 
@@ -64,13 +59,14 @@ public class ChatServlet extends HttpServlet {
         DatabaseDao dao = null;
         try {
             dao = DatabaseDao.getInstance(DBContext.getInstance());
-
-        } catch (Exception ex) {
-            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InternalException ex) {
+            throw ex;
         }
         UserManagement userManagement = new UserManagement(dao);
+        
         User original = userManagement.getUserByName(session.getAttribute("userName").toString());
         User temp = new User(original.getName(), original.getNickname(), original.getPassword(), image);
+        
         userManagement.editUserByName(temp);
 
         response.sendRedirect("./");
