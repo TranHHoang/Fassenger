@@ -50,30 +50,4 @@ public class ChatServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        InputStream image = getUploadAvatar(request);
-
-        DatabaseDao dao = null;
-        try {
-            dao = DatabaseDao.getInstance(DBContext.getInstance());
-        } catch (InternalException ex) {
-            throw ex;
-        }
-        UserManagement userManagement = new UserManagement(dao);
-        
-        User original = userManagement.getUserByName(session.getAttribute("userName").toString());
-        User temp = new User(original.getName(), original.getNickname(), original.getPassword(), image);
-        
-        userManagement.editUserByName(temp);
-
-        response.sendRedirect("./");
-    }
-
-    private InputStream getUploadAvatar(HttpServletRequest request) throws IOException, ServletException {
-        Part filePart = request.getPart("avatar");
-        return filePart.getInputStream();
-    }
 }

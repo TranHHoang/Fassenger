@@ -1,6 +1,7 @@
 package servlets;
 
 import app.UserManagement;
+import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.BufferedInputStream;
@@ -14,6 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import models.User;
 
 /**
@@ -71,4 +74,33 @@ public class AvaServlet extends HttpServlet {
             request.getRequestDispatcher("/jsps/errorPage.jsp").forward(request, response);
         }
     }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        System.out.println("hello");
+        HttpSession session = request.getSession();
+        InputStream image = getUploadAvatar(request);
+
+        DatabaseDao dao = null;
+        try {
+            dao = DatabaseDao.getInstance(DBContext.getInstance());
+        } catch (InternalException ex) {
+            throw ex;
+        }
+        UserManagement userManagement = new UserManagement(dao);
+        
+        User original = userManagement.getUserByName(session.getAttribute("userName").toString());
+        User temp = new User(original.getName(), original.getNickname(), original.getPassword(), image);
+        
+        userManagement.editUserByName(temp);
+
+        response.sendRedirect("./");
+    }
+
+    private InputStream getUploadAvatar(HttpServletRequest request) throws IOException, ServletException {
+        Part filePart = request.getPart("avatar");
+        return filePart.getInputStream();
+    }
+    
 }

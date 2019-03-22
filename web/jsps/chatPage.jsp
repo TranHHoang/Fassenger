@@ -56,7 +56,7 @@
                                     <div>@${userName}</div>
                                 </div>
 
-                                <form action="room" method="POST" enctype="multipart/form-data" style="display: none">
+                                <form action="ava" method="POST" enctype="multipart/form-data" style="display: none">
                                     <input id="input-btn" name="avatar" type="file">
                                     <input id="clickHere" type="submit">
                                 </form>
