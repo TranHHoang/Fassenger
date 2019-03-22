@@ -54,7 +54,7 @@ public class ChatSocket {
             try {
                 // Load message from DAO
                 MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
-                List<Message> messages = mm.getMessagesBeforeDate(500, new Date());
+                List<Message> messages = mm.getMessagesBeforeDate(4, new Date());
 
                 for (Message message : messages) {
                     System.out.println(message);

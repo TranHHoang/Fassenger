@@ -137,15 +137,13 @@ public class DatabaseDao {
         }
     }
 
-    public ArrayList<Message> getMessagesBeforeDate(int numberOfMess, Date lastDate) throws InternalException {
+    public ArrayList<Message> getAllMessages() throws InternalException {
         ArrayList<Message> result = new ArrayList<>();
         try {
-            String sql = "select top (?) * from " + DatabaseTable.MESSAGE_TABLE
-                    + " where " + DatabaseTable.MessageTable.DATE_CREATED + " <= ? order by " + DatabaseTable.MessageTable.DATE_CREATED;
+            String sql = "select * from " + DatabaseTable.MESSAGE_TABLE
+                    + " order by " + DatabaseTable.MessageTable.DATE_CREATED;
 
             PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setInt(1, numberOfMess);
-            pst.setTimestamp(2, new Timestamp(lastDate.getTime()));
 
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
