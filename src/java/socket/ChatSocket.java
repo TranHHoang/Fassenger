@@ -6,13 +6,14 @@ import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -39,6 +40,48 @@ public class ChatSocket {
     public static final String TYPE_STATUS = "status";
 
     private static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
+    private static Set<UserTimeout> userOfflineSet = Collections.synchronizedSet(new HashSet<>());
+    private static Map<String, HttpSession> userSessionMap = Collections.synchronizedMap(new HashMap<>());
+    
+    private static CheckUserTimeoutThread checkUserTimeoutThread;
+
+    class UserTimeout {
+
+        int timeLeft;
+        String userName;
+
+        public UserTimeout(String userName, int timeLeft) {
+            this.timeLeft = timeLeft;
+            this.userName = userName;
+        }
+    }
+
+    class CheckUserTimeoutThread extends Thread {
+
+        @Override
+        public void run() {
+            while (!userOfflineSet.isEmpty()) {
+                try {
+                    for (UserTimeout userTimeout : userOfflineSet) {
+                        if (userTimeout.timeLeft == 0) {
+                            // Remove from db and session
+                            UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
+                            uom.deleteOnlineUser(userTimeout.userName);
+                            // Remove session
+                            userSessionMap.get(userTimeout.userName).invalidate();
+                            // Remove from list
+                            userOfflineSet.clear();
+                        } else {
+                            userTimeout.timeLeft -= 5;
+                        }
+                    }
+                    sleep(5000);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) throws InternalException {
@@ -50,6 +93,15 @@ public class ChatSocket {
             userList.add(session);
 
             String userName = httpSession.getAttribute("userName").toString();
+
+            userSessionMap.put(userName, httpSession);
+            
+            if (userOfflineSet.stream().anyMatch(userTimeout -> userTimeout.userName == userName)) {
+                userOfflineSet.remove(userOfflineSet.stream()
+                        .filter(userTimeout -> userTimeout.userName == userName)
+                        .findFirst()
+                        .orElse(null));
+            }
 
             // Load previous history to chat
             try {
@@ -87,13 +139,13 @@ public class ChatSocket {
         }
     }
 
-    public static JsonObject createClearObj() {
+    public JsonObject createClearObj() {
         return Json.createObjectBuilder()
                 .add("type", "clear")
                 .build();
     }
 
-    public static JsonObject createStatusObj(User user) {
+    public JsonObject createStatusObj(User user) {
         return Json.createObjectBuilder()
                 .add("type", TYPE_STATUS)
                 .add("user", user.getName())
@@ -178,6 +230,12 @@ public class ChatSocket {
     public void onClose(Session session) throws InternalException {
         String userName = session.getUserProperties().get("userName").toString();
         userList.remove(session);
+
+        userOfflineSet.add(new UserTimeout(userName, 120));
+        if (checkUserTimeoutThread == null || !checkUserTimeoutThread.isAlive()) {
+            checkUserTimeoutThread = new CheckUserTimeoutThread();
+            checkUserTimeoutThread.start();
+        }
 
         try {
             UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
