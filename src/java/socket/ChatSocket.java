@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +63,11 @@ public class ChatSocket {
         public void run() {
             while (!userOfflineSet.isEmpty()) {
                 try {
-                    for (UserTimeout userTimeout : userOfflineSet) {
+                    Iterator<UserTimeout> iterator = userOfflineSet.iterator();
+                    
+                    while (iterator.hasNext()) {
+                        UserTimeout userTimeout = iterator.next();
+                        
                         if (userTimeout.timeLeft == 0) {
                             // Remove from db and session
                             UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
@@ -70,7 +75,7 @@ public class ChatSocket {
                             // Remove session
                             userSessionMap.get(userTimeout.userName).invalidate();
                             // Remove from list
-                            userOfflineSet.clear();
+                            iterator.remove();
                         } else {
                             userTimeout.timeLeft -= 5;
                         }
