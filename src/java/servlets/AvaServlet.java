@@ -78,7 +78,7 @@ public class AvaServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("hello");
+//        System.out.println("hello");
         HttpSession session = request.getSession();
         InputStream image = getUploadAvatar(request);
 

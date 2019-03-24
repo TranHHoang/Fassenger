@@ -106,17 +106,20 @@ public class DatabaseDao {
             pst.setString(1, name);
 
             ResultSet rs = pst.executeQuery();
-            rs.next();
 
-            return new User(
-                    rs.getString(UserTable.USER_NAME),
-                    rs.getString(UserTable.NICK_NAME),
-                    rs.getString(UserTable.PASSWORD),
-                    rs.getBinaryStream(UserTable.AVATAR));
+            while (rs.next()) {
+                return new User(
+                        rs.getString(UserTable.USER_NAME),
+                        rs.getString(UserTable.NICK_NAME),
+                        rs.getString(UserTable.PASSWORD),
+                        rs.getBinaryStream(UserTable.AVATAR));
+            }
 
         } catch (SQLException e) {
             throw new InternalException(e.getMessage());
         }
+
+        return null;
     }
 
     /* sql query for Fassenger Message table*/
@@ -168,17 +171,21 @@ public class DatabaseDao {
             System.out.println(new Timestamp(lastDate.getTime()));
 
             ResultSet rs = pst.executeQuery();
-            rs.next();
 
-            byte[] image = rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT);
+            while (rs.next()) {
+                byte[] image = rs.getBytes(DatabaseTable.MessageTable.IMAGE_CONTENT);
 
-            return new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
-                    new java.util.Date(rs.getTimestamp(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
-                    new ByteArrayInputStream(image),
-                    rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT));
+                return new Message(rs.getString(DatabaseTable.MessageTable.USER_NAME),
+                        new java.util.Date(rs.getTimestamp(DatabaseTable.MessageTable.DATE_CREATED).getTime()),
+                        new ByteArrayInputStream(image),
+                        rs.getString(DatabaseTable.MessageTable.TEXT_CONTENT));
+            }
+
         } catch (SQLException e) {
             throw new InternalException(e.getMessage());
         }
+
+        return null;
     }
 
     /*the following code is for user online table*/
@@ -186,7 +193,7 @@ public class DatabaseDao {
         ArrayList<User> users = new ArrayList<>();
         try {
             String sql = "select " + DatabaseTable.UserOnlineTable.USER_NAME
-                    + " from " + DatabaseTable.USER_ONLINE_TABLE;
+                    + " from " + DatabaseTable.USER_ONLINE_TABLE + " where Activated = 1";
             PreparedStatement pst = connection.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -200,9 +207,23 @@ public class DatabaseDao {
 
     public void addUserOnline(String userName) throws InternalException {
         try {
-            String sql = "insert into " + DatabaseTable.USER_ONLINE_TABLE + " values(?)";
+            String sql = "insert into " + DatabaseTable.USER_ONLINE_TABLE + " values (?, ?)";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setString(1, userName);
+            pst.setBoolean(2, true);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    public void toggleUserStatus(String userName, boolean isActivated) throws InternalException {
+        try {
+            String sql = "update " + DatabaseTable.USER_ONLINE_TABLE + " set "
+                    + DatabaseTable.UserOnlineTable.ACTIVATED + " = ? where " + DatabaseTable.UserOnlineTable.USER_NAME + " = ?";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setBoolean(1, isActivated);
+            pst.setString(2, userName);
             pst.executeUpdate();
         } catch (SQLException e) {
             throw new InternalException(e.getMessage());

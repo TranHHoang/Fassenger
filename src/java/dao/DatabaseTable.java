@@ -35,5 +35,6 @@ public class DatabaseTable {
     public static class UserOnlineTable {
 
         public static final String USER_NAME = "UserName";
+        public static final String ACTIVATED = "Activated";
     }
 }

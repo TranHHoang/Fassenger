@@ -6,6 +6,7 @@ import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -57,7 +58,6 @@ public class ChatSocket {
                 List<Message> messages = mm.getMessagesBeforeDate(4, new Date());
 
                 for (Message message : messages) {
-                    System.out.println(message);
                     if (message.getImageContent() == null) {
                         session.getBasicRemote().sendText(createMessageObj(message, message.getName().equals(userName)).toString());
 
@@ -67,14 +67,14 @@ public class ChatSocket {
                 }
 
                 UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
-                List<User> usersOnline = uom.getAllOnlineUser();
+                // Active current user
+                uom.toggleUserStatus(userName, true);
 
-                System.out.println(usersOnline.size());
+                List<User> usersOnline = uom.getAllOnlineUser();
 
                 // Broadcast user online to other users
                 for (Session userSession : userList) {
                     userSession.getBasicRemote().sendText(createClearObj().toString());
-
                     for (User onlineUser : usersOnline) {
                         userSession.getBasicRemote().sendText(createStatusObj(onlineUser).toString());
                     }
@@ -177,25 +177,25 @@ public class ChatSocket {
     @OnClose
     public void onClose(Session session) throws InternalException {
         String userName = session.getUserProperties().get("userName").toString();
+        userList.remove(session);
 
-        UserOnlineManagement uom;
         try {
-            uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
+            UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
+            // Deactive current user
+            uom.toggleUserStatus(userName, false);
 
-            if (!uom.isUserOnline(userName)) {
-                // Broadcast user online to other users
-                for (Session userSession : userList) {
-                    userSession.getBasicRemote().sendText(createClearObj().toString());
-                    for (User onlineUser : uom.getAllOnlineUser()) {
-                        userSession.getBasicRemote().sendText(createStatusObj(onlineUser).toString());
-                    }
+            List<User> usersOnline = uom.getAllOnlineUser();
+
+            // Broadcast user offline to other users
+            for (Session userSession : userList) {
+                userSession.getBasicRemote().sendText(createClearObj().toString());
+                for (User onlineUser : usersOnline) {
+                    userSession.getBasicRemote().sendText(createStatusObj(onlineUser).toString());
                 }
             }
         } catch (InternalException | IOException ex) {
             throw new InternalException(ex.getMessage());
         }
-
-        userList.remove(session);
     }
 
     @OnError

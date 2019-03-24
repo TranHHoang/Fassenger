@@ -40,4 +40,8 @@ public class UserOnlineManagement {
     public boolean isUserOnline(String userName) throws InternalException {
         return dao.isUserOnline(userName);
     }
+    
+    public void toggleUserStatus(String userName, boolean isActivated) throws InternalException {
+        dao.toggleUserStatus(userName, isActivated);
+    }
 }

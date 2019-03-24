@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
             throw ex;
         }
         UserOnlineManagement userOnline = new UserOnlineManagement(dao);
-        
+
         UserManagement userManagement = new UserManagement(dao);
 
         String userName = request.getParameter("userName");
@@ -54,16 +54,23 @@ public class LoginServlet extends HttpServlet {
         User user = userManagement.getUserByName(userName);
 
         if (user != null && user.getPassword().equals(password)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("nickName", user.getNickname());
-            session.setAttribute("userName", userName);
-            userOnline.addOnlineUser(userName);
-            
-            response.sendRedirect("./room");
+            if (!userOnline.isUserOnline(userName)) {
+                HttpSession session = request.getSession();
+                session.setAttribute("nickName", user.getNickname());
+                session.setAttribute("userName", userName);
+                userOnline.addOnlineUser(userName);
+
+                response.sendRedirect("./room");
+            } else {
+                request.setAttribute("status", "FAILED");
+                request.setAttribute("message", "This user has already logged in. You must logout before login again!");
+
+                request.getRequestDispatcher("jsps/login.jsp").forward(request, response);
+            }
         } else {
             request.setAttribute("status", "FAILED");
             request.setAttribute("message", "Incorrect user name or password!");
-            
+
             request.getRequestDispatcher("jsps/login.jsp").forward(request, response);
         }
     }

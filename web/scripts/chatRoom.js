@@ -4,7 +4,7 @@ var audioSound = null;
 function openConnection() {
     if (webSocket === null) {
         webSocket = new WebSocket(`ws://${window.location.host}/Fassenger/chatroom`);
-        
+
         webSocket.onmessage = event => {
             var responseObj = JSON.parse(event.data);
 
@@ -73,8 +73,15 @@ function openConnection() {
                     break;
                 case "status":
                     {
+//                        if (responseObj.activated) {
+//                            if (typeof $(userOnlineBox).children(`#${responseObj.user}`) === 'undefined') {
+//                                return;
+//                            }
+
                         let userContainer = document.createElement('div');
+                        userContainer.id = responseObj.user;
                         userContainer.classList.add('user-container');
+
                         let avatar = document.createElement('span');
                         let avaImg = document.createElement('img');
 
@@ -95,6 +102,10 @@ function openConnection() {
                         userContainer.appendChild(userNameBubble);
 
                         userOnlineBox.appendChild(userContainer);
+//                        } else {
+                        // Remove it from userOnlineBox
+//                            $(userOnlineBox).children(`#${responseObj.user}`).remove();
+//                        }
                     }
                     break;
                 case "clear":
