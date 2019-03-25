@@ -43,7 +43,7 @@ public class ChatSocket {
     private static Set<Session> userList = Collections.synchronizedSet(new HashSet<>());
     private static Set<UserTimeout> userOfflineSet = Collections.synchronizedSet(new HashSet<>());
     private static Map<String, HttpSession> userSessionMap = Collections.synchronizedMap(new HashMap<>());
-    
+
     private static CheckUserTimeoutThread checkUserTimeoutThread;
 
     class UserTimeout {
@@ -64,10 +64,10 @@ public class ChatSocket {
             while (!userOfflineSet.isEmpty()) {
                 try {
                     Iterator<UserTimeout> iterator = userOfflineSet.iterator();
-                    
+
                     while (iterator.hasNext()) {
                         UserTimeout userTimeout = iterator.next();
-                        
+
                         if (userTimeout.timeLeft == 0) {
                             // Remove from db and session
                             UserOnlineManagement uom = new UserOnlineManagement(DatabaseDao.getInstance(DBContext.getInstance()));
@@ -100,7 +100,7 @@ public class ChatSocket {
             String userName = httpSession.getAttribute("userName").toString();
 
             userSessionMap.put(userName, httpSession);
-            
+
             if (userOfflineSet.stream().anyMatch(userTimeout -> userTimeout.userName == userName)) {
                 userOfflineSet.remove(userOfflineSet.stream()
                         .filter(userTimeout -> userTimeout.userName == userName)
@@ -112,8 +112,10 @@ public class ChatSocket {
             try {
                 // Load message from DAO
                 MessageManagement mm = MessageManagement.getInstance(DatabaseDao.getInstance(DBContext.getInstance()));
-                List<Message> messages = mm.getMessagesBeforeDate(4, new Date());
-
+                List<Message> messages = mm.getMessagesBeforeDate(5, new Date());
+                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss-SSS");
+   
+                httpSession.setAttribute("lastMessageDate", format.format(messages.get(0).getDateCreated()));
                 for (Message message : messages) {
                     if (message.getImageContent() == null) {
                         session.getBasicRemote().sendText(createMessageObj(message, message.getName().equals(userName)).toString());

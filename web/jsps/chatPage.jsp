@@ -32,7 +32,9 @@
                             </div>
 
                             <div class="col-7" style="display: flex; flex-flow: column;">
+                                <button onclick="loadMore()">Load more</button>
                                 <div id="chatBox" class="col-md-11 scrollbar scrollbar-near-moon" style="overflow-y: scroll; overflow-x: hidden; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem; height: 78vh">
+                                    
                                 </div>
                                 <div>
                                     <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem;" id="userInput" class="form-control col-md-9" placeholder="Write something here...">
@@ -94,6 +96,40 @@
                     }
                 });
             });
+            
+            function loadMore() {
+                $.ajax({
+                    type: "POST",
+                    url: "room",
+                    success: datas => {
+                        var data = JSON.parse(datas)
+                        console.log(data[0])
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].isSender === true){
+                                if (data[i].text === undefined) {
+                                    $( "#chatBox" ).prepend("<div class='chat-bubble-container-right'><span class='date'>" + data[i].date + "</span><img src='./image/" + data[i].image + "' class='small-image'></div>");                   
+                                
+                                }
+                                else {
+                                    $( "#chatBox" ).prepend("<div class='chat-bubble-container-right'><span class='date'>" + data[i].date + "</span><span class='chat-bubble-right'>" + data[i].text + "</span></div>");                   
+                                
+                                }
+                            }
+                            else {
+                                 if (data[i].text === undefined) {
+                                    $( "#chatBox" ).prepend("<div class='chat-bubble-container-left'><span class='date'>" + data[i].date + "</span><img src='./image/" + data[i].image + "' class='small-image'></div>");                   
+                                
+                                }
+                                else {
+                                    $( "#chatBox" ).prepend("<div class='chat-bubble-container-left'><span class='date'>" + data[i].date + "</span><span class='chat-bubble-left'>" + data[i].text + "</span></div>");                                              
+                            
+                                }
+                            }
+                            
+                        }
+                    }
+                })
+            }
         </script>
     </body>
 </html>

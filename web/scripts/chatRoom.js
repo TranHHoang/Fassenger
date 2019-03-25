@@ -29,7 +29,7 @@ function openConnection() {
                             $("#chatBox").last().children().last().children(".small-ava").css("visibility", "hidden");
                         }
 
-                        console.log(responseObj.image);
+//                        console.log(responseObj.image);
 
                         chatBubble.innerHTML = responseObj.text;
                         date.innerHTML = responseObj.date;
@@ -138,3 +138,4 @@ function handleKeyPress(event) {
         document.getElementById("sendMessageBtn").click();
     }
 }
+
