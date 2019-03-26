@@ -4,10 +4,10 @@
 }
 
 .small-image {
-    max-width: 256px;
+    max-width: 40%;
     max-height: 256px;
-    padding: .75rem;
     object-fit: cover;
+    z-index: -1;
 }
 
 .user-container {
@@ -15,8 +15,16 @@
 }
 
 .user-online-name {
+    margin-top: .25rem;
+    text-align: center;
+    background: #28a745;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: .5rem;
+    border-radius: .5rem;
     margin-left: 1rem;
-    color: #2E7D32;
 }
 
 .small-ava {
@@ -27,26 +35,43 @@
     display: inline-block;
 }
 
+.small-ava-name {
+    margin-top: .25rem;
+    text-align: center;
+    background: #343a40;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: .5rem;
+    border-radius: .5rem;
+    width: 200%;
+    z-index: 9999;
+}
+
 .date {
     padding: .5rem;
     font-size: 75%;
+    color: white;
 }
 
 .chat-bubble-right {
-    background: #0062E6;
-    border-radius: 3rem;
+    background: #17a2b8;
+    border-radius: .75rem;
     padding: .75rem;
     color: white;
     margin-right: .5rem;
-
+    max-width: 40%;
 }
 
 .chat-bubble-left {
-    background: #FAFAFA;
-    border-radius: 3rem;
+    background: #f8f9fa;
+    border-radius: .75rem;
     padding: .75rem;
     text-align: left;
     margin-left: .5rem;
+    max-width: 40%;
+    z-index: -1;
 }
 
 .chat-bubble-container-right {

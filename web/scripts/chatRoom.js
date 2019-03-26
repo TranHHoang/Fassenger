@@ -17,6 +17,9 @@ function openConnection() {
                         let date = document.createElement('span');
                         let avatar = document.createElement('span');
                         let avaImg = document.createElement('img');
+                        let avaName = document.createElement('h6');
+                        avaName.innerHTML = responseObj.user;
+                        avaName.classList.add('small-ava-name');
                         let imgChat = document.createElement('img');
 
                         avaImg.title = responseObj.user;
@@ -39,6 +42,8 @@ function openConnection() {
                         imgChat.classList.add('small-image');
 
                         avatar.appendChild(avaImg);
+                        avatar.appendChild(avaName);
+
 
                         if (responseObj.isSender) {
                             chatBubble.classList.add('chat-bubble-right');
@@ -73,11 +78,6 @@ function openConnection() {
                     break;
                 case "status":
                     {
-//                        if (responseObj.activated) {
-//                            if (typeof $(userOnlineBox).children(`#${responseObj.user}`) === 'undefined') {
-//                                return;
-//                            }
-
                         let userContainer = document.createElement('div');
                         userContainer.id = responseObj.user;
                         userContainer.classList.add('user-container');
@@ -102,10 +102,6 @@ function openConnection() {
                         userContainer.appendChild(userNameBubble);
 
                         userOnlineBox.appendChild(userContainer);
-//                        } else {
-                        // Remove it from userOnlineBox
-//                            $(userOnlineBox).children(`#${responseObj.user}`).remove();
-//                        }
                     }
                     break;
                 case "clear":
@@ -123,7 +119,7 @@ function openConnection() {
 }
 
 function sendMessage() {
-    if (webSocket !== null && webSocket.readyState === WebSocket.OPEN) {
+    if (webSocket !== null && webSocket.readyState === WebSocket.OPEN && userInput.value !== "") {
         webSocket.send("message " + userInput.value);
         userInput.value = "";
     }

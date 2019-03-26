@@ -6,8 +6,6 @@ import dao.DatabaseDao;
 import dao.context.DBContext;
 import servlets.encrypt.PasswordEncryptor;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,17 +37,36 @@ public class RegisterServlet extends HttpServlet {
         } catch (InternalException ex) {
             throw ex;
         }
-        
-        String userName = request.getParameter("userName");
-        String password = PasswordEncryptor.getSHA(request.getParameter("password"));
 
         UserManagement userManagement = new UserManagement(dao);
-        userManagement.addUser(new User(userName, userName, password, null));
 
-        request.setAttribute("status", "SUCCESS");
-        request.setAttribute("message", "Register successful! You can now sign in.");
+        String userName = request.getParameter("userName");
 
-        RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
-        view.forward(request, response);
+        if (userManagement.getUserByName(userName) != null) {
+            request.setAttribute("status", "FAILED");
+            request.setAttribute("message", "This username is already taken!");
+
+            RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
+            view.forward(request, response);
+        } else {
+            String password = PasswordEncryptor.getSHA(request.getParameter("password"));
+            String rePassword = PasswordEncryptor.getSHA(request.getParameter("repassword"));
+
+            if (password.equals(rePassword)) {
+                userManagement.addUser(new User(userName, userName, password, null));
+
+                request.setAttribute("status", "SUCCESS");
+                request.setAttribute("message", "Register successful! You can now sign in.");
+
+                RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
+                view.forward(request, response);
+            } else {
+                request.setAttribute("status", "FAILED");
+                request.setAttribute("message", "Passwords are not matched!");
+
+                RequestDispatcher view = request.getRequestDispatcher("jsps/login.jsp");
+                view.forward(request, response);
+            }
+        }
     }
 }

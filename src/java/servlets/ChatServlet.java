@@ -1,36 +1,28 @@
 package servlets;
 
 import app.MessageManagement;
-import app.UserManagement;
 import app.exception.InternalException;
 import dao.DatabaseDao;
 import dao.context.DBContext;
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 import models.Message;
-import models.User;
 import static socket.ChatSocket.TYPE_MESSAGE;
-import static socket.ChatSocket.TYPE_STATUS;
 
 public class ChatServlet extends HttpServlet {
 
@@ -85,7 +77,7 @@ public class ChatServlet extends HttpServlet {
             } catch (ParseException ex) {
                 throw new InternalException(ex.getMessage());
             }
-            ArrayList<Message> messageListTemp = messageManagement.getMessagesBeforeDate(2, dates);
+            ArrayList<Message> messageListTemp = messageManagement.getMessagesBeforeDate(20, dates);
             Collections.reverse(messageListTemp);
             response.setContentType("application/text");
             response.setCharacterEncoding("UTF-8");

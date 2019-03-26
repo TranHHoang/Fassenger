@@ -14,10 +14,11 @@
         <link rel="stylesheet" href="./styles/style.css">
 
         <link rel="stylesheet" href="./styles/fontawesome-free-5.8.1-web/css/all.css">
+        <script src="./scripts/jquery-3.3.1.min.js"></script>
+        <script src="./scripts/randomImg.js"></script>
 
     </head>
-    <body style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
-          url('https://source.unsplash.com/featured/1280x720/?nature,travel,wallpapers,backgrounds,weather,technology') no-repeat fixed center; background-size: cover">
+    <body style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)) no-repeat fixed center; background-size: cover">
         <div class="container">
             <div class="row">
                 <div class="col-md-9 col-md-7 col-lg-5 mx-auto">
@@ -32,7 +33,7 @@
                         <sub>global chat <i class="fas fa-comments"></i></sub>
                     </h2>
 
-                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.75);">
+                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.5);">
 
                         <div class="card-body">
                             <div class="col-lg">
@@ -60,11 +61,6 @@
                                         <label for="inputPasswordSignIn">Password</label>
                                     </div>
 
-                                    <div class="custom-control custom-checkbox mb-3">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">Remember me</label>
-                                    </div>
-
                                     <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit"><i class="fas fa-sign-in-alt"></i> Sign in</button>
                                 </form>
                             </div>
@@ -87,7 +83,7 @@
                                     </div>
 
                                     <div class="form-label-group">
-                                        <input type="password" id="inputRePasswordSignUp" class="form-control" placeholder="Re-enter password" required>
+                                        <input name="repassword" type="password" id="inputRePasswordSignUp" class="form-control" placeholder="Re-enter password" required>
                                         <label for="inputRePasswordSignUp">Re-enter password</label>
                                     </div>
 
