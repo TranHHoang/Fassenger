@@ -8,14 +8,12 @@
         <title>Chat page</title>
 
         <script src="./scripts/chatRoom.js"></script>
+        <link rel="stylesheet" href="./styles/bootstrap-4.3.1-dist/css/bootstrap.css">
 
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <link rel="stylesheet" href="./styles/fontawesome-free-5.8.1-web/css/all.css">
         <link rel="stylesheet" href="./styles/style.css">
-        <script
-            src="http://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
+        <script src="./scripts/jquery-3.3.1.min.js"></script>
+
     </head>
     <body onload="openConnection()" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
           url('https://source.unsplash.com/featured/1280x720/?nature,travel,wallpapers,backgrounds,weather,technology') no-repeat fixed center; background-size: cover">
@@ -32,14 +30,14 @@
                             </div>
 
                             <div class="col-7" style="display: flex; flex-flow: column;">
-                                <button onclick="loadMore()">Load more</button>
                                 <div id="chatBox" class="col-md-11 scrollbar scrollbar-near-moon" style="overflow-y: scroll; overflow-x: hidden; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem; height: 78vh">
-                                    
+                                    <div id="chatBoxLoadMoreBtn" style="text-align: center">
+                                        <a href="#" onclick="loadMore()">Load more</a>
+                                    </div>
                                 </div>
                                 <div>
                                     <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem;" id="userInput" class="form-control col-md-9" placeholder="Write something here...">
                                     <button onClick="clickBtn('imageInputField')" title="Send an image" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="far fa-image"></i></button>
-                                    <button title="Send an attachment" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-paperclip"></i></button>
                                     <button id="sendMessageBtn" onclick="sendMessage()" title="Press ENTER to send" class="btn btn-primary" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-arrow-right"></i></button>
 
                                     <form id="formChatImage" action="image" method="POST" enctype="multipart/form-data" style="display: none">
@@ -51,7 +49,7 @@
                             <div class="col" style="text-align: center">
                                 <h4 class="card-title text-center"><b>Hello there,</b></h4>
                                 <div style="text-align: center">
-                                    <img src="./ava/${userName}" style="border-radius: 50%; display: inline-block; width: 256px; height: 256px; margin-bottom: 1rem">
+                                    <img src="./ava/${userName}" style="object-fit: cover;border-radius: 50%; display: inline-block; width: 256px; height: 256px; margin-bottom: 1rem">
                                 </div>
                                 <div style="margin-bottom: 1rem">
                                     <h2>${nickName}</h2>
@@ -62,7 +60,6 @@
                                     <input id="input-btn" name="avatar" type="file">
                                     <input id="clickHere" type="submit">
                                 </form>
-                                <button title="Change nickname" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-signature"></i></button>
                                 <button onclick="clickBtn('input-btn')" title="Change avatar" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-user-circle"></i></button>
                                 <a href="logout"><button id="logoutBtn" title="Logout" class="btn btn-light" style="width: 50px; height: 50px; border-radius: 50%" value="Send"><i class="fas fa-sign-out-alt"></i></button><a/>
                             </div>
@@ -96,7 +93,7 @@
                     }
                 });
             });
-            
+
             function loadMore() {
                 $.ajax({
                     type: "POST",
@@ -105,27 +102,22 @@
                         var data = JSON.parse(datas)
                         console.log(data[0])
                         for (var i = 0; i < data.length; i++) {
-                            if (data[i].isSender === true){
+                            if (data[i].isSender === true) {
                                 if (data[i].text === undefined) {
-                                    $( "#chatBox" ).prepend("<div class='chat-bubble-container-right'><span class='date'>" + data[i].date + "</span><img src='./image/" + data[i].image + "' class='small-image'></div>");                   
-                                
+                                    $("#chatBoxLoadMoreBtn").after("<div class='chat-bubble-container-right'><span class='date'>" + data[i].date + "</span><img src='./image/" + data[i].image + "' class='small-image'></div>");
+                                } else {
+                                    $("#chatBoxLoadMoreBtn").after("<div class='chat-bubble-container-right'><span class='date'>" + data[i].date + "</span><span class='chat-bubble-right'>" + data[i].text + "</span></div>");
                                 }
-                                else {
-                                    $( "#chatBox" ).prepend("<div class='chat-bubble-container-right'><span class='date'>" + data[i].date + "</span><span class='chat-bubble-right'>" + data[i].text + "</span></div>");                   
-                                
-                                }
-                            }
-                            else {
-                                 if (data[i].text === undefined) {
-                                    $( "#chatBox" ).prepend("<div class='chat-bubble-container-left'><span class='date'>" + data[i].date + "</span><img src='./image/" + data[i].image + "' class='small-image'></div>");                   
-                                
-                                }
-                                else {
-                                    $( "#chatBox" ).prepend("<div class='chat-bubble-container-left'><span class='date'>" + data[i].date + "</span><span class='chat-bubble-left'>" + data[i].text + "</span></div>");                                              
-                            
+                            } else {
+                                if (data[i].text === undefined) {
+                                    $("#chatBoxLoadMoreBtn").after("<div class='chat-bubble-container-left'><img src='./image/" + data[i].image + "' class='small-image'><span class='date'>" + data[i].date + "</span></div>");
+
+                                } else {
+                                    $("#chatBoxLoadMoreBtn").after("<div class='chat-bubble-container-left'><span class='chat-bubble-left'>" + data[i].text + "</span><span class='date'>" + data[i].date + "</span></div>");
+
                                 }
                             }
-                            
+
                         }
                     }
                 })

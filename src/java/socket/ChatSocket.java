@@ -238,7 +238,7 @@ public class ChatSocket {
         String userName = session.getUserProperties().get("userName").toString();
         userList.remove(session);
 
-        userOfflineSet.add(new UserTimeout(userName, 120));
+        userOfflineSet.add(new UserTimeout(userName, 1));
         if (checkUserTimeoutThread == null || !checkUserTimeoutThread.isAlive()) {
             checkUserTimeoutThread = new CheckUserTimeoutThread();
             checkUserTimeoutThread.start();
