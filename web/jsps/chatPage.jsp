@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem; background: white; color: white; border: 1px dashed white" id="userInput" class="form-control col-10" placeholder="Write something here..." required>
+                                    <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem; background: white; border: 1px dashed white" id="userInput" class="form-control col-9" placeholder="Write something here..." required>
                                     <button onClick="clickBtn('imageInputField')" title="Send an image" class="btn btn-light" style="height: 50px; border-radius: .75rem" value="Send"><i class="far fa-image"></i> Image</button>
                                     <button id="sendMessageBtn" onclick="sendMessage()" title="Press ENTER to send" class="btn btn-info" style="height: 50px; border-radius: .75rem" value="Send"><i class="fas fa-arrow-right"></i></button>
 
