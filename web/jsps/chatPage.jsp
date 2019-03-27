@@ -16,11 +16,11 @@
         <script src="./scripts/randomImg.js"></script>
 
     </head>
-    <body onload="openConnection()" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)) url(./images/7.jpg) no-repeat fixed center ; background-size: cover">
+    <body onload="openConnection()" style="background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)) no-repeat fixed center ; background-size: cover">
         <div class="container" style="max-width: 100%">
             <div class="row">
                 <div class="col-12">
-                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0); min-height: 93vh; margin-bottom: 1.5rem!important; margin-top: 1.5rem!important">
+                    <div class="card card-signin my-5" style="background-color: rgba(255,255,255,0.1); min-height: 93vh; margin-bottom: 1.5rem!important; margin-top: 1.5rem!important">
 
                         <div class="card-body row">
                             <div class="col" style="display: flex; flex-flow: column;">
@@ -33,12 +33,12 @@
                                 <div style="overflow: hidden">
                                     <div id="chatBox" class="scrollbar scrollbar-near-moon" style="width: 100%; height: 100%; overflow-y: scroll; padding-right: 17px;box-sizing: content-box; border-radius: 1.5rem; flex-grow: 1; margin-bottom: 1.5rem; height: 78vh">
                                         <div id="chatBoxLoadMoreBtn" style="text-align: center">
-                                            <a href="#" onclick="loadMore()">Load more</a>
+                                            <a href="#" onclick="loadMore()" style="color: white;">Load more</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem; background: transparent; color: white; border: 1px dashed white" id="userInput" class="form-control col-10" placeholder="Write something here..." required>
+                                    <input onkeypress="handleKeyPress(event)" type="text" style="vertical-align: middle; display: inline; padding: var(--input-padding-y) var(--input-padding-x); height: auto; border-radius: 2rem; background: white; color: white; border: 1px dashed white" id="userInput" class="form-control col-10" placeholder="Write something here..." required>
                                     <button onClick="clickBtn('imageInputField')" title="Send an image" class="btn btn-light" style="height: 50px; border-radius: .75rem" value="Send"><i class="far fa-image"></i> Image</button>
                                     <button id="sendMessageBtn" onclick="sendMessage()" title="Press ENTER to send" class="btn btn-info" style="height: 50px; border-radius: .75rem" value="Send"><i class="fas fa-arrow-right"></i></button>
 

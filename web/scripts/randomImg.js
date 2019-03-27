@@ -5,7 +5,7 @@ $(document).ready(() => {
 function getRandomImage() {
     var images = [];
 
-    for (let i = 1; i <= 17; i++) {
+    for (let i = 1; i <= 16; i++) {
         images.push(i + ".jpg");
     }
 
